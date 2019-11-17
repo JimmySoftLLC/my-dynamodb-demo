@@ -18,12 +18,14 @@ class App extends Component {
     alert: null,
     user: {},
     repos: [],
+    my_users: [],
   };
 
   //search github users
   searchUsers = async text => {
     //console.log(text);
     this.setState({ loading: true });
+    this.setState({ buttonType: false });
     try {
       const res = await axios.get(
         'https://api.github.com/search/users' +
@@ -34,16 +36,26 @@ class App extends Component {
           '&client_secret=' +
           process.env.REACT_APP_GITHUB_CLIENT_SECRET
       );
-      console.log(res.status);
-      console.log(res.data);
+      //console.log(res.status);
+      //console.log(res.data);
       this.setState({ users: res.data.items, loading: false });
+      for (var i = 0; i < this.state.users.length; i++) {}
+      const tempUser = [];
+      tempUser.push(this.state.users[0]);
+      tempUser.push(this.state.users[10]);
+      tempUser.push(this.state.users[5]);
+      tempUser.push(this.state.users[6]);
+      tempUser.push(this.state.users[11]);
+      tempUser.push(this.state.users[1]);
+      this.setState({ my_users: tempUser });
     } catch (err) {
       this.setState({ users: [], loading: false });
     }
   };
 
-  getUser = async userName => {
+  getUser = async (userName, isMemberOfTeam) => {
     this.setState({ loading: true });
+    this.setState({ buttonType: false });
     try {
       const res = await axios.get(
         'https://api.github.com/users/' +
@@ -53,8 +65,8 @@ class App extends Component {
           '&client_secret=' +
           process.env.REACT_APP_GITHUB_CLIENT_SECRET
       );
-      console.log(res.status);
-      console.log(res.data);
+      // console.log(res.status);
+      // console.log(res.data);
       this.setState({ user: res.data, loading: false });
     } catch (err) {
       this.setState({ user: {}, loading: false });
@@ -63,6 +75,7 @@ class App extends Component {
 
   getUserRepos = async userName => {
     this.setState({ loading: true });
+    this.setState({ buttonType: false });
     try {
       const res = await axios.get(
         'https://api.github.com/users/' +
@@ -73,8 +86,8 @@ class App extends Component {
           '&client_secret=' +
           process.env.REACT_APP_GITHUB_CLIENT_SECRET
       );
-      console.log(res.status);
-      console.log(res.data);
+      //console.log(res.status);
+      //console.log(res.data);
       this.setState({ repos: res.data, loading: false });
     } catch (err) {
       this.setState({ repos: {}, loading: false });
@@ -89,7 +102,7 @@ class App extends Component {
   };
 
   render() {
-    const { users, loading, user, repos } = this.state;
+    const { users, loading, user, repos, my_users } = this.state;
     return (
       <Router>
         <div className='App'>
@@ -107,7 +120,12 @@ class App extends Component {
                       showClear={users.length > 0 ? true : false}
                       setAlert={this.setAlert}
                     />
-                    <Users loading={loading} users={users} />
+                    <Users
+                      loading={loading}
+                      users={users}
+                      my_users={my_users}
+                      currenlyOnMyTeamPage={false}
+                    />
                   </Fragment>
                 )}
               />
@@ -117,7 +135,7 @@ class App extends Component {
                 path='/myTeam'
                 render={props => (
                   <Fragment>
-                    <MyTeam users={users} />
+                    <MyTeam my_users={my_users} currenlyOnMyTeamPage={true} />
                   </Fragment>
                 )}
               />

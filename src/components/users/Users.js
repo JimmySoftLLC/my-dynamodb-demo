@@ -8,9 +8,13 @@ const Users = props => {
     return <Spinner />;
   } else {
     return (
-      <div style={userStyle}>
+      <div className='grid-4'>
         {props.users.map(user => (
-          <UserItem key={user.id} user={user} />
+          <UserItem
+            key={user.id}
+            user={user}
+            currenlyOnMyTeamPage={props.currenlyOnMyTeamPage}
+          />
         ))}
       </div>
     );
@@ -20,12 +24,7 @@ const Users = props => {
 Users.propTypes = {
   users: PropTypes.array.isRequired,
   loading: PropTypes.bool.isRequired,
-};
-
-const userStyle = {
-  display: 'grid',
-  gridTemplateColumns: 'repeat(3,1fr)',
-  gridGap: '1rem',
+  currenlyOnMyTeamPage: PropTypes.bool.isRequired,
 };
 
 export default Users;

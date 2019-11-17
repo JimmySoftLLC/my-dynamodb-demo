@@ -14,9 +14,13 @@ const MyTeam = props => {
         The next step is to reach out to them and see what we can work on
         together.
       </p>
-      <div style={userStyle}>
-        {props.users.map(user => (
-          <UserItem key={user.id} user={user} />
+      <div className='grid-4'>
+        {props.my_users.map(user => (
+          <UserItem
+            key={user.id}
+            user={user}
+            currenlyOnMyTeamPage={props.currenlyOnMyTeamPage}
+          />
         ))}
       </div>
     </Fragment>
@@ -24,13 +28,8 @@ const MyTeam = props => {
 };
 
 MyTeam.propTypes = {
-  users: PropTypes.array.isRequired,
-};
-
-const userStyle = {
-  display: 'grid',
-  gridTemplateColumns: 'repeat(3,1fr)',
-  gridGap: '1rem',
+  my_users: PropTypes.array.isRequired,
+  currenlyOnMyTeamPage: PropTypes.bool.isRequired,
 };
 
 export default MyTeam;

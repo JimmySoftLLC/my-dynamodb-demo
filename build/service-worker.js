@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/my-dynamodb-build/precache-manifest.25e6bc432ba7c7b1001b586f795d9ab2.js"
+  "/my-dynamodb-build/precache-manifest.db0089737824ae2206d9f98a98906bd8.js"
 );
 
 self.addEventListener('message', (event) => {
