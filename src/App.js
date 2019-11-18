@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import Navbar from './components/layout/Navbar';
 import Users from './components/users/Users';
-import User from './components/users/User';
+import UserDetailsCard from './components/users/UserDetailsCard';
 import Search from './components/users/Search';
 import Alert from './components/layout/Alert';
 import About from './components/pages/About';
@@ -36,8 +36,6 @@ class App extends Component {
           '&client_secret=' +
           process.env.REACT_APP_GITHUB_CLIENT_SECRET
       );
-      //console.log(res.status);
-      //console.log(res.data);
       this.setState({ users: res.data.items, loading: false });
       for (var i = 0; i < this.state.users.length; i++) {}
       const tempUser = [];
@@ -53,7 +51,7 @@ class App extends Component {
     }
   };
 
-  getUser = async (userName, isMemberOfTeam) => {
+  getUser = async userName => {
     this.setState({ loading: true });
     this.setState({ buttonType: false });
     try {
@@ -65,8 +63,6 @@ class App extends Component {
           '&client_secret=' +
           process.env.REACT_APP_GITHUB_CLIENT_SECRET
       );
-      // console.log(res.status);
-      // console.log(res.data);
       this.setState({ user: res.data, loading: false });
     } catch (err) {
       this.setState({ user: {}, loading: false });
@@ -86,12 +82,18 @@ class App extends Component {
           '&client_secret=' +
           process.env.REACT_APP_GITHUB_CLIENT_SECRET
       );
-      //console.log(res.status);
-      //console.log(res.data);
       this.setState({ repos: res.data, loading: false });
     } catch (err) {
       this.setState({ repos: {}, loading: false });
     }
+  };
+
+  removeUserFromTeam = async login => {
+    console.log('Remove item: ' + login);
+  };
+
+  addUserToTeam = async login => {
+    console.log('Add item: ' + login);
   };
 
   clearUsers = () => this.setState({ users: [], loading: false });
@@ -124,7 +126,7 @@ class App extends Component {
                       loading={loading}
                       users={users}
                       my_users={my_users}
-                      currenlyOnMyTeamPage={false}
+                      onMyTeamPage={false}
                     />
                   </Fragment>
                 )}
@@ -135,7 +137,7 @@ class App extends Component {
                 path='/myTeam'
                 render={props => (
                   <Fragment>
-                    <MyTeam my_users={my_users} currenlyOnMyTeamPage={true} />
+                    <MyTeam my_users={my_users} onMyTeamPage={true} />
                   </Fragment>
                 )}
               />
@@ -143,7 +145,7 @@ class App extends Component {
                 exact
                 path='/user/:login'
                 render={props => (
-                  <User
+                  <UserDetailsCard
                     {...props}
                     getUser={this.getUser}
                     getUserRepos={this.getUserRepos}

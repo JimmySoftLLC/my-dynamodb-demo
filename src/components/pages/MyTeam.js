@@ -1,8 +1,9 @@
 import React, { Fragment } from 'react';
-import UserItem from '../users/UserItem';
+import UserSummaryCard from '../users/UserSummaryCard';
 import PropTypes from 'prop-types';
 
 const MyTeam = props => {
+  console.log('testing at my team ' + props.onMyTeamPage);
   return (
     <Fragment>
       <h2 className='page-top-margin'>My Project Team</h2>
@@ -16,10 +17,10 @@ const MyTeam = props => {
       </p>
       <div className='grid-4'>
         {props.my_users.map(user => (
-          <UserItem
+          <UserSummaryCard
             key={user.id}
             user={user}
-            currenlyOnMyTeamPage={props.currenlyOnMyTeamPage}
+            onMyTeamPage={props.onMyTeamPage}
           />
         ))}
       </div>
@@ -29,7 +30,7 @@ const MyTeam = props => {
 
 MyTeam.propTypes = {
   my_users: PropTypes.array.isRequired,
-  currenlyOnMyTeamPage: PropTypes.bool.isRequired,
+  onMyTeamPage: PropTypes.bool.isRequired,
 };
 
 export default MyTeam;

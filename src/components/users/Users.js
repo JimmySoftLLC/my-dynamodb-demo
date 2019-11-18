@@ -1,19 +1,20 @@
 import React from 'react';
-import UserItem from './UserItem';
+import UserSummaryCard from './UserSummaryCard';
 import Spinner from '../layout/Spinner';
 import PropTypes from 'prop-types';
 
 const Users = props => {
+  console.log('testing at my home page ' + props.onMyTeamPage);
   if (props.loading) {
     return <Spinner />;
   } else {
     return (
       <div className='grid-4'>
         {props.users.map(user => (
-          <UserItem
+          <UserSummaryCard
             key={user.id}
             user={user}
-            currenlyOnMyTeamPage={props.currenlyOnMyTeamPage}
+            onMyTeamPage={props.onMyTeamPage}
           />
         ))}
       </div>
@@ -24,7 +25,7 @@ const Users = props => {
 Users.propTypes = {
   users: PropTypes.array.isRequired,
   loading: PropTypes.bool.isRequired,
-  currenlyOnMyTeamPage: PropTypes.bool.isRequired,
+  onMyTeamPage: PropTypes.bool.isRequired,
 };
 
 export default Users;

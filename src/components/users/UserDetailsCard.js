@@ -9,7 +9,7 @@ export class User extends Component {
     this.props.getUserRepos(this.props.match.params.login);
   }
 
-  static proTypes = {
+  static propTypes = {
     loading: PropTypes.bool.isRequired,
     user: PropTypes.object.isRequired,
     getUser: PropTypes.func.isRequired,
@@ -33,12 +33,13 @@ export class User extends Component {
     } = this.props.user;
 
     const { loading } = this.props;
+    const currenlyOnMyTeamPage = this.props.currenlyOnMyTeamPage;
 
     if (loading) return <Spinner />;
 
     return (
       <Fragment>
-        {true ? (
+        {currenlyOnMyTeamPage ? (
           <Link to='/' className='btn btn-light page-top-margin'>
             Back To Find Developers
           </Link>
