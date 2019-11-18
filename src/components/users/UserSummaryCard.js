@@ -2,20 +2,21 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
-export class UserCard extends Component {
-  componentDidMount() {
-    // this.props.getUser(this.props.match.params.login);
-    // this.props.getUserRepos(this.props.match.params.login);
-  }
-
+export class UserSummaryCard extends Component {
   static propTypes = {
     user: PropTypes.object.isRequired,
-    //currentlyOnMyTeamPage: PropTypes.bool.isRequired,
+    removeUserFromTeam: PropTypes.func.isRequired,
+    addUserToTeam: PropTypes.func.isRequired,
   };
 
-  handleClick = () => {
-    console.log('you finally made it here!!!!');
-    //this.props.setAlert(this.props.user.login, 'light');
+  removeUser = () => {
+    //console.log('remove user operation');
+    this.props.removeUserFromTeam(this.props.user.login);
+  };
+
+  addUser = () => {
+    //console.log('add user operation');
+    this.props.addUserToTeam(this.props.user);
   };
 
   render() {
@@ -32,20 +33,17 @@ export class UserCard extends Component {
           to={'/user/' + this.props.user.login}
           className='btn btn-dark btn-sm my-1'
         >
-          More info dude
+          More info
         </Link>{' '}
         {this.props.onMyTeamPage ? (
           <button
             className='btn btn-dark btn-sm my-1'
-            onClick={this.props.handleClick}
+            onClick={this.removeUser}
           >
             Remove
           </button>
         ) : (
-          <button
-            className='btn btn-dark btn-sm my-1'
-            onClick={this.props.handleClick}
-          >
+          <button className='btn btn-dark btn-sm my-1' onClick={this.addUser}>
             Add
           </button>
         )}
@@ -54,4 +52,4 @@ export class UserCard extends Component {
   }
 }
 
-export default UserCard;
+export default UserSummaryCard;

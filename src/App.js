@@ -7,7 +7,6 @@ import Alert from './components/layout/Alert';
 import About from './components/pages/About';
 import MyTeam from './components/pages/MyTeam';
 import axios from 'axios';
-
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import './App.css';
 
@@ -37,15 +36,6 @@ class App extends Component {
           process.env.REACT_APP_GITHUB_CLIENT_SECRET
       );
       this.setState({ users: res.data.items, loading: false });
-      for (var i = 0; i < this.state.users.length; i++) {}
-      const tempUser = [];
-      tempUser.push(this.state.users[0]);
-      tempUser.push(this.state.users[10]);
-      tempUser.push(this.state.users[5]);
-      tempUser.push(this.state.users[6]);
-      tempUser.push(this.state.users[11]);
-      tempUser.push(this.state.users[1]);
-      this.setState({ my_users: tempUser });
     } catch (err) {
       this.setState({ users: [], loading: false });
     }
@@ -90,10 +80,22 @@ class App extends Component {
 
   removeUserFromTeam = async login => {
     console.log('Remove item: ' + login);
+    let tempUser = [];
+    for (var i = 0; i < this.state.my_users.length; i++) {
+      if (this.state.my_users[i].login !== login) {
+        tempUser.push(this.state.my_users[i]);
+      }
+    }
+    this.setState({ my_users: tempUser });
   };
 
-  addUserToTeam = async login => {
-    console.log('Add item: ' + login);
+  addUserToTeam = async myUser => {
+    // console.log('Add item:');
+    // console.log(myUser);
+    let tempUser = [];
+    tempUser = this.state.my_users.slice(0);
+    tempUser.push(myUser);
+    this.setState({ my_users: tempUser });
   };
 
   clearUsers = () => this.setState({ users: [], loading: false });
@@ -126,6 +128,8 @@ class App extends Component {
                       loading={loading}
                       users={users}
                       my_users={my_users}
+                      removeUserFromTeam={this.removeUserFromTeam}
+                      addUserToTeam={this.addUserToTeam}
                       onMyTeamPage={false}
                     />
                   </Fragment>
@@ -137,7 +141,12 @@ class App extends Component {
                 path='/myTeam'
                 render={props => (
                   <Fragment>
-                    <MyTeam my_users={my_users} onMyTeamPage={true} />
+                    <MyTeam
+                      my_users={my_users}
+                      removeUserFromTeam={this.removeUserFromTeam}
+                      addUserToTeam={this.addUserToTeam}
+                      onMyTeamPage={true}
+                    />
                   </Fragment>
                 )}
               />

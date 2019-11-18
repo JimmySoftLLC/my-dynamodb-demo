@@ -1,5 +1,4 @@
 import React, { Component, Fragment } from 'react';
-import Spinner from '../layout/Spinner';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
@@ -10,7 +9,6 @@ export class User extends Component {
   }
 
   static propTypes = {
-    loading: PropTypes.bool.isRequired,
     user: PropTypes.object.isRequired,
     getUser: PropTypes.func.isRequired,
     getUserRepos: PropTypes.func.isRequired,
@@ -32,22 +30,11 @@ export class User extends Component {
       hireable,
     } = this.props.user;
 
-    const { loading } = this.props;
-    const currenlyOnMyTeamPage = this.props.currenlyOnMyTeamPage;
-
-    if (loading) return <Spinner />;
-
     return (
       <Fragment>
-        {currenlyOnMyTeamPage ? (
-          <Link to='/' className='btn btn-light page-top-margin'>
-            Back To Find Developers
-          </Link>
-        ) : (
-          <Link to='/myTeam' className='btn btn-light page-top-margin'>
-            Back To My Team
-          </Link>
-        )}
+        <Link to='/' className='btn btn-light page-top-margin'>
+          Back To Find Developers
+        </Link>
         Hireable: {''}
         {hireable ? (
           <i className='fas fa-check text-success' />
@@ -79,12 +66,6 @@ export class User extends Component {
             >
               Visit Github Profile
             </a>
-            <button
-              className='btn btn-dark my-1'
-              //onClick={this.props.clearUsers}
-            >
-              Add
-            </button>
             <ul>
               <li>
                 {login && (

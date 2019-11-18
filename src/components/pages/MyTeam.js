@@ -8,8 +8,7 @@ const MyTeam = props => {
     <Fragment>
       <h2 className='page-top-margin'>My Project Team</h2>
       <p>
-        Based on my search I have selected these developers I want to
-        collaborate with on a fun project.
+        Based on my search I have selected these developers to collaborate with.
       </p>
       <p>
         The next step is to reach out to them and see what we can work on
@@ -20,7 +19,10 @@ const MyTeam = props => {
           <UserSummaryCard
             key={user.id}
             user={user}
+            my_users={props.my_users}
             onMyTeamPage={props.onMyTeamPage}
+            removeUserFromTeam={props.removeUserFromTeam}
+            addUserToTeam={props.addUserToTeam}
           />
         ))}
       </div>

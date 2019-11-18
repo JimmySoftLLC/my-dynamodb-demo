@@ -14,7 +14,10 @@ const Users = props => {
           <UserSummaryCard
             key={user.id}
             user={user}
+            my_users={props.my_users}
             onMyTeamPage={props.onMyTeamPage}
+            removeUserFromTeam={props.removeUserFromTeam}
+            addUserToTeam={props.addUserToTeam}
           />
         ))}
       </div>
