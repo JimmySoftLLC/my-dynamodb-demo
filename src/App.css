@@ -382,8 +382,48 @@ table th {
   margin-right: 0.6rem;
 }
 
+.footer {
+  position: fixed;
+  bottom: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.7rem 2rem;
+  z-index: 1;
+  width: 100%;
+  opacity: 0.9;
+  margin-bottom: 0rem;
+}
+
+.footer ul {
+  display: flex;
+}
+
+.footer a {
+  color: #fff;
+  padding: 0.45rem;
+  margin: 0 0.25rem;
+}
+
+.footer a:hover {
+  color: var(--light-color);
+}
+
+.footer .welcome span {
+  margin-right: 0.6rem;
+}
+
 .page-top-margin {
   margin-top: 5rem;
+}
+
+.page-bottom-margin {
+  margin-bottom: 5rem;
+}
+
+.alert-top-margin {
+  margin-top: 5rem;
+  margin-bottom: -3rem;
 }
 
 /* Mobile Styles */
@@ -400,7 +440,7 @@ table th {
 }
 
 /* Mobile Styles */
-@media (max-width: 700px) {
+@media (max-width: 755px) {
   .hide-sm {
     display: none;
   }
@@ -438,10 +478,19 @@ table th {
   .page-top-margin {
     margin-top: 6rem;
   }
+
+  .page-bottom-margin {
+    margin-bottom: 6rem;
+  }
+
+  .alert-top-margin {
+    margin-top: 7rem;
+    margin-bottom: -4rem;
+  }
 }
 
 /* Mobile Styles */
-@media (max-width: 455px) {
+@media (max-width: 575px) {
   .hide-sm {
     display: none;
   }
@@ -477,7 +526,16 @@ table th {
   }
 
   .page-top-margin {
-    margin-top: 7rem;
+    margin-top: 8rem;
+  }
+
+  .page-bottom-margin {
+    margin-bottom: 7rem;
+  }
+
+  .alert-top-margin {
+    margin-top: 8rem;
+    margin-bottom: -5rem;
   }
 }
 

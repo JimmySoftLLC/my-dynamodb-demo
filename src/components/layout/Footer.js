@@ -1,12 +1,22 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-//import { Link } from 'react-router-dom';
 
 const Footer = props => {
   return (
-    <nav className='footer bg-primary'>
-      <p>Footer</p>
-    </nav>
+    <footer className='footer bg-primary'>
+      <p>© JimmySoft LLC 2019</p>
+      <ul>
+        <li>
+          <a
+            target='_blank'
+            rel='noopener noreferrer'
+            href='https://www.jimmysoftllc.com/'
+          >
+            <i className='fas fa-external-link-alt'></i> JimmySoft LLC
+          </a>
+        </li>
+      </ul>
+    </footer>
   );
 };
 

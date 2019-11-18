@@ -9,7 +9,7 @@ const Users = props => {
     return <Spinner />;
   } else {
     return (
-      <div className='grid-4'>
+      <div className='grid-4 page-bottom-margin'>
         {props.users.map(user => (
           <UserSummaryCard
             key={user.id}

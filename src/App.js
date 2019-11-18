@@ -6,6 +6,8 @@ import Search from './components/users/Search';
 import Alert from './components/layout/Alert';
 import About from './components/pages/About';
 import MyTeam from './components/pages/MyTeam';
+import MyDynamoTable from './components/pages/MyDynamoTable';
+import Footer from './components/layout/Footer';
 import axios from 'axios';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import './App.css';
@@ -18,6 +20,7 @@ class App extends Component {
     user: {},
     repos: [],
     my_users: [],
+    my_amazon_payload: {},
   };
 
   //search github users
@@ -90,12 +93,35 @@ class App extends Component {
   };
 
   addUserToTeam = async myUser => {
-    // console.log('Add item:');
-    // console.log(myUser);
-    let tempUser = [];
-    tempUser = this.state.my_users.slice(0);
-    tempUser.push(myUser);
-    this.setState({ my_users: tempUser });
+    let foundDuplicate = false;
+    for (var j = 0; j < this.state.my_users.length; j++) {
+      if (this.state.my_users[j].login === myUser.login) {
+        foundDuplicate = true;
+      }
+    }
+    if (foundDuplicate) {
+      console.log('found duplicate');
+      this.setState({
+        alert: {
+          msg:
+            'Developer already in My team, human cloning not currently implemented.',
+          type: 'light',
+        },
+      });
+      setTimeout(() => this.setState({ alert: null }), 5000);
+    } else {
+      let tempUser = [];
+      tempUser = this.state.my_users.slice(0);
+      tempUser.push(myUser);
+      let tempUser2 = [];
+      for (var i = 0; i < this.state.users.length; i++) {
+        if (this.state.users[i].login !== myUser.login) {
+          tempUser2.push(this.state.users[i]);
+        }
+      }
+      this.setState({ my_users: tempUser });
+      this.setState({ users: tempUser2 });
+    }
   };
 
   clearUsers = () => this.setState({ users: [], loading: false });
@@ -103,6 +129,20 @@ class App extends Component {
   setAlert = (msg, type) => {
     this.setState({ alert: { msg: msg, type: type } });
     setTimeout(() => this.setState({ alert: null }), 5000);
+  };
+
+  //search github users
+  getUserFromAWS = async () => {
+    //console.log(text);
+    try {
+      const res = await axios.get(
+        'https://22j5hgzvof.execute-api.us-east-1.amazonaws.com/default/restapi?TableName=my_open_source_team'
+      );
+      console.log(res.data);
+      this.setState({ my_amazon_payload: res.data });
+    } catch (err) {
+      this.setState({ my_amazon_payload: '' });
+    }
   };
 
   render() {
@@ -118,11 +158,12 @@ class App extends Component {
                 path='/'
                 render={props => (
                   <Fragment>
+                    <Alert alert={this.state.alert} />
                     <Search
+                      setAlert={this.setAlert}
                       searchUsers={this.searchUsers}
                       clearUsers={this.clearUsers}
                       showClear={users.length > 0 ? true : false}
-                      setAlert={this.setAlert}
                     />
                     <Users
                       loading={loading}
@@ -152,6 +193,18 @@ class App extends Component {
               />
               <Route
                 exact
+                path='/myDynamoTable'
+                render={props => (
+                  <Fragment>
+                    <MyDynamoTable
+                      my_amazon_payload={this.my_amazon_payload}
+                      getUserFromAWS={this.getUserFromAWS}
+                    />
+                  </Fragment>
+                )}
+              />
+              <Route
+                exact
                 path='/user/:login'
                 render={props => (
                   <UserDetailsCard
@@ -165,8 +218,8 @@ class App extends Component {
                 )}
               />
             </Switch>
-            <Alert alert={this.state.alert} />
           </div>
+          <Footer />
         </div>
       </Router>
     );

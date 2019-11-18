@@ -10,6 +10,11 @@ const Navbar = props => {
       </h1>
       <ul>
         <li>
+          <Link to='/myDynamoTable'>
+            <i className='fab fa-aws'></i> My Table
+          </Link>
+        </li>
+        <li>
           <Link to='/myTeam'>
             <i className='fas fa-users'></i> My Team
           </Link>

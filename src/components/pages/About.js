@@ -101,10 +101,23 @@ const About = () => {
           dynamoDB CLI reference
         </a>
       </p>
-      <h2 className=''>myDynamoDB API connections</h2>
+      <h2 className=''>myDynamoDB API</h2>
       <p className='p'>
-        MyDynamoDB use AWS endpoint in the following configuration.
+        Originally I was going to write my own RESTful service to connect to
+        dynamoDB.
       </p>
+      <p className='p'>
+        After discussing this with some developers at the DC code and coffee
+        they suggested I try a lambda function instead. AWS has is a nice
+        boilerplate that already exists in AWS when you set up a lamda function.
+        It connects the lamda endpoint to a API gateway and has crud code
+        already implemented.
+      </p>
+      <p className='p'>
+        Thats was easy part now to figure out the json body that AWS is
+        expecting for put, post, delete etc. Must dig into the documents!
+      </p>
+      <p className='p page-bottom-margin'></p>
     </Fragment>
   );
 };

@@ -7,14 +7,14 @@ const MyTeam = props => {
   return (
     <Fragment>
       <h2 className='page-top-margin'>My Project Team</h2>
-      <p>
+      <p className='p'>
         Based on my search I have selected these developers to collaborate with.
       </p>
-      <p>
+      <p className='p'>
         The next step is to reach out to them and see what we can work on
         together.
       </p>
-      <div className='grid-4'>
+      <div className='grid-4 page-bottom-margin '>
         {props.my_users.map(user => (
           <UserSummaryCard
             key={user.id}

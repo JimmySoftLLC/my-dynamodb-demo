@@ -1,21 +1,21 @@
 {
   "files": {
-    "main.css": "/my-dynamodb-build/static/css/main.6f8400ad.chunk.css",
-    "main.js": "/my-dynamodb-build/static/js/main.cabbf58d.chunk.js",
-    "main.js.map": "/my-dynamodb-build/static/js/main.cabbf58d.chunk.js.map",
+    "main.css": "/my-dynamodb-build/static/css/main.91f0d149.chunk.css",
+    "main.js": "/my-dynamodb-build/static/js/main.d470d330.chunk.js",
+    "main.js.map": "/my-dynamodb-build/static/js/main.d470d330.chunk.js.map",
     "runtime-main.js": "/my-dynamodb-build/static/js/runtime-main.38a7004f.js",
     "runtime-main.js.map": "/my-dynamodb-build/static/js/runtime-main.38a7004f.js.map",
-    "static/js/2.6d44b46e.chunk.js": "/my-dynamodb-build/static/js/2.6d44b46e.chunk.js",
-    "static/js/2.6d44b46e.chunk.js.map": "/my-dynamodb-build/static/js/2.6d44b46e.chunk.js.map",
+    "static/js/2.08c44ea7.chunk.js": "/my-dynamodb-build/static/js/2.08c44ea7.chunk.js",
+    "static/js/2.08c44ea7.chunk.js.map": "/my-dynamodb-build/static/js/2.08c44ea7.chunk.js.map",
     "index.html": "/my-dynamodb-build/index.html",
-    "precache-manifest.db0089737824ae2206d9f98a98906bd8.js": "/my-dynamodb-build/precache-manifest.db0089737824ae2206d9f98a98906bd8.js",
+    "precache-manifest.6893fbd21cd30674c8c4ae0cb8a82297.js": "/my-dynamodb-build/precache-manifest.6893fbd21cd30674c8c4ae0cb8a82297.js",
     "service-worker.js": "/my-dynamodb-build/service-worker.js",
-    "static/css/main.6f8400ad.chunk.css.map": "/my-dynamodb-build/static/css/main.6f8400ad.chunk.css.map"
+    "static/css/main.91f0d149.chunk.css.map": "/my-dynamodb-build/static/css/main.91f0d149.chunk.css.map"
   },
   "entrypoints": [
     "static/js/runtime-main.38a7004f.js",
-    "static/js/2.6d44b46e.chunk.js",
-    "static/css/main.6f8400ad.chunk.css",
-    "static/js/main.cabbf58d.chunk.js"
+    "static/js/2.08c44ea7.chunk.js",
+    "static/css/main.91f0d149.chunk.css",
+    "static/js/main.d470d330.chunk.js"
   ]
 }
