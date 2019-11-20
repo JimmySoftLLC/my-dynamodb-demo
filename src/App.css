@@ -559,6 +559,10 @@ hue-6-2: #c18401
 
 */
 
+.display-linebreak {
+  white-space: pre-line;
+}
+
 .hljs {
   display: block;
   overflow-x: auto;

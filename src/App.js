@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import Navbar from './components/layout/Navbar';
 import Users from './components/users/Users';
+import FetchAWS from './components/users/FetchAWS';
 import UserDetailsCard from './components/users/UserDetailsCard';
 import Search from './components/users/Search';
 import Alert from './components/layout/Alert';
@@ -14,13 +15,13 @@ import './App.css';
 
 class App extends Component {
   state = {
+    amazonResponse: ' ',
     users: [],
     loading: false,
     alert: null,
     user: {},
     repos: [],
     my_users: [],
-    my_amazon_payload: {},
   };
 
   //search github users
@@ -59,6 +60,30 @@ class App extends Component {
       this.setState({ user: res.data, loading: false });
     } catch (err) {
       this.setState({ user: {}, loading: false });
+    }
+  };
+
+  //get data from aws
+  getUserFromAWS = async () => {
+    try {
+      const res = await axios.get(
+        'https://22j5hgzvof.execute-api.us-east-1.amazonaws.com/production/restapi?TableName=my_open_source_team'
+      );
+      console.log(res.data);
+      let myResData = res.data;
+      let myMessage = 'Number of teams: ' + myResData.Count + '\n';
+      myMessage += '----------------------\n';
+      for (var i = 0; i < myResData.Count; i++) {
+        myMessage +=
+          'Team: ' +
+          myResData.Items[i].team_id +
+          ' Name: ' +
+          myResData.Items[i].team_name +
+          '\n';
+      }
+      this.setState({ amazonResponse: myMessage });
+    } catch (err) {
+      this.setState({ amazonResponse: '' });
     }
   };
 
@@ -104,7 +129,7 @@ class App extends Component {
       this.setState({
         alert: {
           msg:
-            'Developer already in My team, human cloning not currently implemented.',
+            'Developer already in My Team, human cloning not currently implemented.',
           type: 'light',
         },
       });
@@ -131,22 +156,15 @@ class App extends Component {
     setTimeout(() => this.setState({ alert: null }), 5000);
   };
 
-  //search github users
-  getUserFromAWS = async () => {
-    //console.log(text);
-    try {
-      const res = await axios.get(
-        'https://22j5hgzvof.execute-api.us-east-1.amazonaws.com/default/restapi?TableName=my_open_source_team'
-      );
-      console.log(res.data);
-      this.setState({ my_amazon_payload: res.data });
-    } catch (err) {
-      this.setState({ my_amazon_payload: '' });
-    }
-  };
-
   render() {
-    const { users, loading, user, repos, my_users } = this.state;
+    const {
+      users,
+      loading,
+      user,
+      repos,
+      my_users,
+      amazonResponse,
+    } = this.state;
     return (
       <Router>
         <div className='App'>
@@ -196,10 +214,8 @@ class App extends Component {
                 path='/myDynamoTable'
                 render={props => (
                   <Fragment>
-                    <MyDynamoTable
-                      my_amazon_payload={this.my_amazon_payload}
-                      getUserFromAWS={this.getUserFromAWS}
-                    />
+                    <FetchAWS getUserFromAWS={this.getUserFromAWS} />
+                    <MyDynamoTable amazonResponse={amazonResponse} />
                   </Fragment>
                 )}
               />

@@ -23,6 +23,9 @@ exports.handler = (event, context, callback) => {
       body: err ? err.message : JSON.stringify(res),
       headers: {
         'Content-Type': 'application/json',
+        //Note: the AWS boiler plate did not have these two header entries they are need for avoid CORS errors
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET,HEAD,OPTIONS,POST,PUT',
       },
     });
 
