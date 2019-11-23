@@ -63,7 +63,6 @@ class App extends Component {
     }
   };
 
-  //get data from aws
   getUserFromAWS = async () => {
     try {
       const res = await axios.get(
@@ -84,6 +83,51 @@ class App extends Component {
       this.setState({ amazonResponse: myMessage });
     } catch (err) {
       this.setState({ amazonResponse: '' });
+    }
+  };
+
+  putItemDynamoDB = async () => {
+    try {
+      const res = await axios.post(
+        'https://22j5hgzvof.execute-api.us-east-1.amazonaws.com/production/restapi',
+        {
+          myBody: {
+            TableName: 'my_open_source_team',
+            Item: {
+              team_id: 3001,
+              team_data: 3001,
+              team_name: 3000,
+            },
+            ReturnConsumedCapacity: 'TOTAL',
+          },
+          myMethod: 'putItem',
+        }
+      );
+      console.log(res.data);
+      //this.setState({ amazonResponse: myMessage });
+    } catch (err) {
+      //this.setState({ amazonResponse: '' });
+    }
+  };
+
+  deleteItemDynamoDB = async () => {
+    try {
+      const res = await axios.post(
+        'https://22j5hgzvof.execute-api.us-east-1.amazonaws.com/production/restapi',
+        {
+          myMethod: 'deleteItem',
+          myBody: {
+            TableName: 'my_open_source_team',
+            Key: {
+              team_id: 3001,
+            },
+          },
+        }
+      );
+      console.log(res.data);
+      //this.setState({ amazonResponse: myMessage });
+    } catch (err) {
+      //this.setState({ amazonResponse: '' });
     }
   };
 

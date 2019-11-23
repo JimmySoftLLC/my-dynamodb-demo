@@ -23,24 +23,31 @@ exports.handler = (event, context, callback) => {
       body: err ? err.message : JSON.stringify(res),
       headers: {
         'Content-Type': 'application/json',
-        //Note: the AWS boiler plate did not have these two header entries they are need for avoid CORS errors
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Methods': 'GET,HEAD,OPTIONS,POST,PUT',
       },
     });
 
   switch (event.httpMethod) {
-    case 'DELETE':
-      dynamo.deleteItem(JSON.parse(event.body), done);
-      break;
     case 'GET':
+      console.log(event.queryStringParameters);
       dynamo.scan({ TableName: event.queryStringParameters.TableName }, done);
       break;
     case 'POST':
-      dynamo.putItem(JSON.parse(event.body), done);
-      break;
-    case 'PUT':
-      dynamo.updateItem(JSON.parse(event.body), done);
+      var myEventBody = JSON.parse(event.body);
+      switch (myEventBody.myMethod) {
+        case 'deleteItem':
+          dynamo.deleteItem(myEventBody.myBody, done);
+          break;
+        case 'putItem':
+          dynamo.putItem(myEventBody.myBody, done);
+          break;
+        case 'updateItem':
+          dynamo.updateItem(JSON.parse(event.body), done);
+          break;
+        default:
+          done(new Error(`Unsupported method "${event.httpMethod}"`));
+      }
       break;
     default:
       done(new Error(`Unsupported method "${event.httpMethod}"`));
