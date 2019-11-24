@@ -7,12 +7,7 @@ const MyDynamoTable = props => {
     <Fragment>
       <h2>Dynamo Table Items</h2>
       <p className='p'>
-        The following is the result of a get request to my dynamoDB tables on
-        AWS. It was set up on AWS using an api gateway and a lamda function
-        connected to my dynamoDB database.
-      </p>
-      <p className='p'>
-        The next step is get all the remaining endpoints working.
+        The following is the results from Scan, Put, Update from dynamoDB.
       </p>
       <code className='hljs dos display-linebreak'>{props.amazonResponse}</code>
       <div className='grid-4 page-bottom-margin '></div>

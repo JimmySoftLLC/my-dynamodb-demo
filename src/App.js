@@ -63,10 +63,39 @@ class App extends Component {
     }
   };
 
-  getUserFromAWS = async () => {
+  // scanDynamoDB = async () => {
+  //   try {
+  //     const res = await axios.get(
+  //       'https://22j5hgzvof.execute-api.us-east-1.amazonaws.com/production/restapi?TableName=my_open_source_team'
+  //     );
+  //     console.log(res.data);
+  //     let myResData = res.data;
+  //     let myMessage = 'Number of teams: ' + myResData.Count + '\n';
+  //     myMessage += '----------------------\n';
+  //     for (var i = 0; i < myResData.Count; i++) {
+  //       myMessage +=
+  //         'Team: ' +
+  //         myResData.Items[i].team_id +
+  //         ' Name: ' +
+  //         myResData.Items[i].team_name +
+  //         '\n';
+  //     }
+  //     this.setState({ amazonResponse: myMessage });
+  //   } catch (err) {
+  //     this.setState({ amazonResponse: '' });
+  //   }
+  // };
+
+  scanDynamoDB = async TableName => {
     try {
-      const res = await axios.get(
-        'https://22j5hgzvof.execute-api.us-east-1.amazonaws.com/production/restapi?TableName=my_open_source_team'
+      const res = await axios.post(
+        'https://22j5hgzvof.execute-api.us-east-1.amazonaws.com/production/restapi',
+        {
+          myBody: {
+            TableName: TableName,
+          },
+          myMethod: 'scan',
+        }
       );
       console.log(res.data);
       let myResData = res.data;
@@ -86,17 +115,17 @@ class App extends Component {
     }
   };
 
-  putItemDynamoDB = async () => {
+  putItemDynamoDB = async (TableName, team_id, team_name, team_data) => {
     try {
       const res = await axios.post(
         'https://22j5hgzvof.execute-api.us-east-1.amazonaws.com/production/restapi',
         {
           myBody: {
-            TableName: 'my_open_source_team',
+            TableName: TableName,
             Item: {
-              team_id: 3001,
-              team_data: 3001,
-              team_name: 3000,
+              team_id: team_id,
+              team_name: team_name,
+              team_data: team_data,
             },
             ReturnConsumedCapacity: 'TOTAL',
           },
@@ -110,16 +139,16 @@ class App extends Component {
     }
   };
 
-  deleteItemDynamoDB = async () => {
+  deleteItemDynamoDB = async (TableName, team_id) => {
     try {
       const res = await axios.post(
         'https://22j5hgzvof.execute-api.us-east-1.amazonaws.com/production/restapi',
         {
           myMethod: 'deleteItem',
           myBody: {
-            TableName: 'my_open_source_team',
+            TableName: TableName,
             Key: {
-              team_id: 3001,
+              team_id: team_id,
             },
           },
         }
@@ -258,7 +287,7 @@ class App extends Component {
                 path='/myDynamoTable'
                 render={props => (
                   <Fragment>
-                    <FetchAWS getUserFromAWS={this.getUserFromAWS} />
+                    <FetchAWS scanDynamoDB={this.scanDynamoDB} />
                     <MyDynamoTable amazonResponse={amazonResponse} />
                   </Fragment>
                 )}
