@@ -8,8 +8,8 @@ const dynamo = new doc.DynamoDB();
  * Demonstrates a simple HTTP endpoint using API Gateway.
  *
  * I use POST with a request body for all methods.
- * myMethod is used to define the method.
- * I like to do this for security reasons because the query strings
+ * myMethod is used to define the mongoDB method.
+ * I like to do this for security reasons because query strings
  * in URL can be logged on the server.
  *
  * The following JSON object is an example for dynamo.putItem.
@@ -27,7 +27,7 @@ const dynamo = new doc.DynamoDB();
  *          myMethod: 'putItem',
  *        }
  *
- * I also had to add to get is to work with CORS
+ * I also had to add to these items to the headers for CORS
  * 'Access-Control-Allow-Origin': '*',
  * 'Access-Control-Allow-Methods': "POST",
  *

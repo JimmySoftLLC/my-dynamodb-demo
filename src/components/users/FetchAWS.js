@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 
 export class FetchAWS extends Component {
   state = {
-    text: 'my_open_source_team',
-    team_id: '',
-    team_name: '',
-    team_data: '',
+    TableName: 'my_open_source_team',
+    team_id: 0,
+    team_name: 'No Name',
+    team_data: '{}',
   };
 
   onChange = e => {
@@ -15,18 +15,47 @@ export class FetchAWS extends Component {
 
   static propTypes = {
     scanDynamoDB: PropTypes.func.isRequired,
+    putItemDynamoDB: PropTypes.func.isRequired,
+    updateItemDynamoDB: PropTypes.func.isRequired,
+    deleteItemDynamoDB: PropTypes.func.isRequired,
+    getItemDynamoDB: PropTypes.func.isRequired,
   };
 
   scanDynamoDB = () => {
-    this.props.scanDynamoDB(this.state.text);
+    this.props.scanDynamoDB(this.state.TableName);
   };
 
-  putDynamoDB = () => {
-    //this.props.putDynamoDB('my_open_source_team');
+  putItemDynamoDB = () => {
+    console.log('put command called  ' + this.state.TableName + 'team_id');
+    this.props.putItemDynamoDB(
+      this.state.TableName,
+      parseInt(this.state.team_id),
+      this.state.team_name,
+      this.state.team_data
+    );
   };
 
-  updateDynamoDB = () => {
-    //this.props.updateDynamoDB('my_open_source_team');
+  updateItemDynamoDB = () => {
+    this.props.updateItemDynamoDB(
+      this.state.TableName,
+      parseInt(this.state.team_id),
+      this.state.team_name,
+      this.state.team_data
+    );
+  };
+
+  deleteItemDynamoDB = () => {
+    this.props.deleteItemDynamoDB(
+      this.state.TableName,
+      parseInt(this.state.team_id)
+    );
+  };
+
+  getItemDynamoDB = () => {
+    this.props.getItemDynamoDB(
+      this.state.TableName,
+      parseInt(this.state.team_id)
+    );
   };
 
   render() {
@@ -38,30 +67,35 @@ export class FetchAWS extends Component {
         >
           Scan
         </button>
-        <button className='btn btn-light' onClick={this.scanDynamoDB}>
+        <button className='btn btn-light' onClick={this.putItemDynamoDB}>
           Put
         </button>
-        <button className='btn btn-light' onClick={this.scanDynamoDB}>
+        <button className='btn btn-light' onClick={this.updateItemDynamoDB}>
           Update
         </button>
-
+        <button className='btn btn-light' onClick={this.deleteItemDynamoDB}>
+          Delete
+        </button>
+        <button className='btn btn-light' onClick={this.getItemDynamoDB}>
+          Get
+        </button>
         <input
           type='text'
-          name='text'
-          placeholder='Team Id'
+          name='team_id'
+          placeholder='Team Id >1999 0-1999 reserved'
           value={this.state.team_id}
           onChange={this.onChange}
         />
         <input
           type='text'
-          name='text'
+          name='team_name'
           placeholder='Team Name'
           value={this.state.team_name}
           onChange={this.onChange}
         />
         <input
           type='text'
-          name='text'
+          name='team_data'
           placeholder='Team Data'
           value={this.state.team_data}
           onChange={this.onChange}

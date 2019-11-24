@@ -63,29 +63,6 @@ class App extends Component {
     }
   };
 
-  // scanDynamoDB = async () => {
-  //   try {
-  //     const res = await axios.get(
-  //       'https://22j5hgzvof.execute-api.us-east-1.amazonaws.com/production/restapi?TableName=my_open_source_team'
-  //     );
-  //     console.log(res.data);
-  //     let myResData = res.data;
-  //     let myMessage = 'Number of teams: ' + myResData.Count + '\n';
-  //     myMessage += '----------------------\n';
-  //     for (var i = 0; i < myResData.Count; i++) {
-  //       myMessage +=
-  //         'Team: ' +
-  //         myResData.Items[i].team_id +
-  //         ' Name: ' +
-  //         myResData.Items[i].team_name +
-  //         '\n';
-  //     }
-  //     this.setState({ amazonResponse: myMessage });
-  //   } catch (err) {
-  //     this.setState({ amazonResponse: '' });
-  //   }
-  // };
-
   scanDynamoDB = async TableName => {
     try {
       const res = await axios.post(
@@ -133,9 +110,33 @@ class App extends Component {
         }
       );
       console.log(res.data);
-      //this.setState({ amazonResponse: myMessage });
+      this.setState({ amazonResponse: JSON.stringify(res.data) });
     } catch (err) {
-      //this.setState({ amazonResponse: '' });
+      this.setState({ amazonResponse: '' });
+    }
+  };
+
+  updateItemDynamoDB = async (TableName, team_id, team_name, team_data) => {
+    try {
+      const res = await axios.post(
+        'https://22j5hgzvof.execute-api.us-east-1.amazonaws.com/production/restapi',
+        {
+          myBody: {
+            TableName: TableName,
+            Item: {
+              team_id: team_id,
+              team_name: team_name,
+              team_data: team_data,
+            },
+            ReturnConsumedCapacity: 'TOTAL',
+          },
+          myMethod: 'putItem',
+        }
+      );
+      console.log(res.data);
+      this.setState({ amazonResponse: JSON.stringify(res.data) });
+    } catch (err) {
+      this.setState({ amazonResponse: '' });
     }
   };
 
@@ -154,9 +155,31 @@ class App extends Component {
         }
       );
       console.log(res.data);
-      //this.setState({ amazonResponse: myMessage });
+      this.setState({ amazonResponse: JSON.stringify(res.data) });
     } catch (err) {
-      //this.setState({ amazonResponse: '' });
+      this.setState({ amazonResponse: '' });
+    }
+  };
+
+  getItemDynamoDB = async (TableName, team_id, team_name, team_data) => {
+    try {
+      const res = await axios.post(
+        'https://22j5hgzvof.execute-api.us-east-1.amazonaws.com/production/restapi',
+        {
+          myBody: {
+            TableName: TableName,
+            Key: {
+              team_id: team_id,
+            },
+            ReturnConsumedCapacity: 'TOTAL',
+          },
+          myMethod: 'getItem',
+        }
+      );
+      console.log(res.data);
+      this.setState({ amazonResponse: JSON.stringify(res.data) });
+    } catch (err) {
+      this.setState({ amazonResponse: '' });
     }
   };
 
@@ -287,7 +310,13 @@ class App extends Component {
                 path='/myDynamoTable'
                 render={props => (
                   <Fragment>
-                    <FetchAWS scanDynamoDB={this.scanDynamoDB} />
+                    <FetchAWS
+                      scanDynamoDB={this.scanDynamoDB}
+                      putItemDynamoDB={this.putItemDynamoDB}
+                      updateItemDynamoDB={this.updateItemDynamoDB}
+                      deleteItemDynamoDB={this.deleteItemDynamoDB}
+                      getItemDynamoDB={this.getItemDynamoDB}
+                    />
                     <MyDynamoTable amazonResponse={amazonResponse} />
                   </Fragment>
                 )}
