@@ -5,18 +5,35 @@ const doc = require('dynamodb-doc');
 const dynamo = new doc.DynamoDB();
 
 /**
- * Demonstrates a simple HTTP endpoint using API Gateway. You have full
- * access to the request and response payload, including headers and
- * status code.
+ * Demonstrates a simple HTTP endpoint using API Gateway.
  *
- * To scan a DynamoDB table, make a GET request with the TableName as a
- * query string parameter. To put, update, or delete an item, make a POST,
- * PUT, or DELETE request respectively, passing in the payload to the
- * DynamoDB API as a JSON body.
+ * I use POST with a request body for all methods.
+ * myMethod is used to define the method.
+ * I like to do this for security reasons because the query strings
+ * in URL can be logged on the server.
+ *
+ * The following JSON object is an example for dynamo.putItem.
+ *
+ *        {
+ *          myBody: {
+ *            TableName: TableName,
+ *            Item: {
+ *               team_id: team_id,
+ *               team_name: team_name,
+ *               team_data: team_data,
+ *             },
+ *             ReturnConsumedCapacity: 'TOTAL',
+ *           },
+ *          myMethod: 'putItem',
+ *        }
+ *
+ * I also had to add to get is to work with CORS
+ * 'Access-Control-Allow-Origin': '*',
+ * 'Access-Control-Allow-Methods': "POST",
+ *
  */
-exports.handler = (event, context, callback) => {
-  //console.log('Received event:', JSON.stringify(event, null, 2));
 
+exports.handler = (event, context, callback) => {
   const done = (err, res) =>
     callback(null, {
       statusCode: err ? '400' : '200',
@@ -24,15 +41,11 @@ exports.handler = (event, context, callback) => {
       headers: {
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET,HEAD,OPTIONS,POST,PUT',
+        'Access-Control-Allow-Methods': 'POST',
       },
     });
 
   switch (event.httpMethod) {
-    case 'GET':
-      console.log(event.queryStringParameters);
-      dynamo.scan({ TableName: event.queryStringParameters.TableName }, done);
-      break;
     case 'POST':
       var myEventBody = JSON.parse(event.body);
       switch (myEventBody.myMethod) {
@@ -43,7 +56,10 @@ exports.handler = (event, context, callback) => {
           dynamo.putItem(myEventBody.myBody, done);
           break;
         case 'updateItem':
-          dynamo.updateItem(JSON.parse(event.body), done);
+          dynamo.updateItem(myEventBody.myBody, done);
+          break;
+        case 'scan':
+          dynamo.scan(myEventBody.myBody, done);
           break;
         default:
           done(new Error(`Unsupported method "${event.httpMethod}"`));
