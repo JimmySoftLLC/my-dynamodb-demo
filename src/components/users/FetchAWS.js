@@ -1,16 +1,13 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-export class FetchAWS extends Component {
+class FetchAWS extends Component {
   state = {
     TableName: 'my_open_source_team',
-    team_id: 0,
-    team_name: 'No Name',
-    team_data: '{}',
   };
 
-  onChange = e => {
-    this.setState({ [e.target.name]: e.target.value });
+  onChangeLocal = e => {
+    this.props.onChange(e);
   };
 
   static propTypes = {
@@ -19,6 +16,7 @@ export class FetchAWS extends Component {
     updateItemDynamoDB: PropTypes.func.isRequired,
     deleteItemDynamoDB: PropTypes.func.isRequired,
     getItemDynamoDB: PropTypes.func.isRequired,
+    onChange: PropTypes.func.isRequired,
   };
 
   scanDynamoDB = () => {
@@ -29,32 +27,32 @@ export class FetchAWS extends Component {
     console.log('put command called  ' + this.state.TableName + 'team_id');
     this.props.putItemDynamoDB(
       this.state.TableName,
-      parseInt(this.state.team_id),
-      this.state.team_name,
-      this.state.team_data
+      parseInt(this.props.team_id),
+      this.props.team_name,
+      this.props.team_data
     );
   };
 
   updateItemDynamoDB = () => {
     this.props.updateItemDynamoDB(
       this.state.TableName,
-      parseInt(this.state.team_id),
-      this.state.team_name,
-      this.state.team_data
+      parseInt(this.props.team_id),
+      this.props.team_name,
+      this.props.team_data
     );
   };
 
   deleteItemDynamoDB = () => {
     this.props.deleteItemDynamoDB(
       this.state.TableName,
-      parseInt(this.state.team_id)
+      parseInt(this.props.team_id)
     );
   };
 
   getItemDynamoDB = () => {
     this.props.getItemDynamoDB(
       this.state.TableName,
-      parseInt(this.state.team_id)
+      parseInt(this.props.team_id)
     );
   };
 
@@ -79,26 +77,35 @@ export class FetchAWS extends Component {
         <button className='btn btn-light' onClick={this.getItemDynamoDB}>
           Get
         </button>
+        <p className='input-aws-table-label'>
+          Team Id (Note: 0 to 10 are read only)
+        </p>
         <input
           type='text'
           name='team_id'
-          placeholder='Team Id >1999 0-1999 reserved'
-          value={this.state.team_id}
-          onChange={this.onChange}
+          placeholder='Team Id'
+          value={this.props.team_id}
+          onChange={this.onChangeLocal}
+          className='input-aws-table'
         />
+        <p className='input-aws-table-label'>Team Name</p>
         <input
           type='text'
           name='team_name'
           placeholder='Team Name'
-          value={this.state.team_name}
-          onChange={this.onChange}
+          value={this.props.team_name}
+          onChange={this.onChangeLocal}
+          className='input-aws-table'
         />
-        <input
+        <p className='input-aws-table-label'>Team Data (JSON string)</p>
+        <textarea
           type='text'
           name='team_data'
+          rows='6'
           placeholder='Team Data'
-          value={this.state.team_data}
-          onChange={this.onChange}
+          value={this.props.team_data}
+          onChange={this.onChangeLocal}
+          className='text-area-aws-table'
         />
       </div>
     );

@@ -263,6 +263,7 @@ img {
 .alert-light {
   background: var(--light-color);
   color: #333;
+  margin-bottom: 0.4rem;
 }
 
 .btn-dark,
@@ -316,6 +317,18 @@ input {
   margin: 1.2rem 0;
 }
 
+.text-area-aws-table {
+  font-size: 15px;
+}
+
+.input-aws-table {
+  margin: 0.2rem 0 0 0;
+}
+
+.input-aws-table-label {
+  margin: 1rem 0 0 0;
+}
+
 .form-text {
   display: block;
   margin-top: 0.3rem;
@@ -326,13 +339,17 @@ input[type='text'],
 input[type='email'],
 input[type='password'],
 input[type='date'],
-select,
-textarea {
+textarea,
+select {
   display: block;
   width: 100%;
   padding: 0.4rem;
   font-size: 1.2rem;
   border: 1px solid #ccc;
+}
+
+textarea {
+  margin-bottom: 0.8rem;
 }
 
 input[type='submit'],
@@ -638,4 +655,38 @@ hue-6-2: #c18401
 
 .hljs-link {
   text-decoration: underline;
+}
+
+.modal {
+  font-size: 12px;
+}
+.modal > .header {
+  width: 100%;
+  border-bottom: 1px solid gray;
+  font-size: 18px;
+  text-align: center;
+  padding: 5px;
+}
+.modal > .content {
+  width: 100%;
+  padding: 10px 5px;
+}
+.modal > .actions {
+  width: 100%;
+  padding: 10px 5px;
+  margin: auto;
+  text-align: center;
+}
+.modal > .close {
+  cursor: pointer;
+  position: absolute;
+  display: block;
+  padding: 2px 5px;
+  line-height: 20px;
+  right: -10px;
+  top: -10px;
+  font-size: 24px;
+  background: #ffffff;
+  border-radius: 18px;
+  border: 1px solid #cfcece;
 }

@@ -5,6 +5,7 @@ import FetchAWS from './components/users/FetchAWS';
 import UserDetailsCard from './components/users/UserDetailsCard';
 import Search from './components/users/Search';
 import Alert from './components/layout/Alert';
+import AlertDialog from './components/layout/AlertDialog';
 import About from './components/pages/About';
 import MyTeam from './components/pages/MyTeam';
 import MyDynamoTable from './components/pages/MyDynamoTable';
@@ -22,6 +23,16 @@ class App extends Component {
     user: {},
     repos: [],
     my_users: [],
+    alertOpen: false,
+    alertMessage: ' ',
+    alertTitle: ' ',
+    team_id: 0,
+    team_name: ' ',
+    team_data: ' ',
+  };
+
+  onChange = e => {
+    this.setState({ [e.target.name]: e.target.value });
   };
 
   //search github users
@@ -112,7 +123,9 @@ class App extends Component {
       console.log(res.data);
       this.setState({ amazonResponse: JSON.stringify(res.data) });
     } catch (err) {
-      this.setState({ amazonResponse: '' });
+      this.setAlertDialog(
+        err.message + ' Make sure data is in all fields and of the right type.'
+      );
     }
   };
 
@@ -136,7 +149,9 @@ class App extends Component {
       console.log(res.data);
       this.setState({ amazonResponse: JSON.stringify(res.data) });
     } catch (err) {
-      this.setState({ amazonResponse: '' });
+      this.setAlertDialog(
+        err.message + ' Make sure data is in all fields and of the right type.'
+      );
     }
   };
 
@@ -157,7 +172,7 @@ class App extends Component {
       console.log(res.data);
       this.setState({ amazonResponse: JSON.stringify(res.data) });
     } catch (err) {
-      this.setState({ amazonResponse: '' });
+      this.setAlertDialog(err.message);
     }
   };
 
@@ -177,9 +192,14 @@ class App extends Component {
         }
       );
       console.log(res.data);
-      this.setState({ amazonResponse: JSON.stringify(res.data) });
+      this.setState({
+        amazonResponse: JSON.stringify(res.data),
+        team_name: res.data.Item.team_name,
+        team_data: res.data.Item.team_data,
+        my_users: JSON.parse(res.data.Item.team_data),
+      });
     } catch (err) {
-      this.setState({ amazonResponse: '' });
+      this.setAlertDialog(err.message);
     }
   };
 
@@ -211,6 +231,9 @@ class App extends Component {
       }
     }
     this.setState({ my_users: tempUser });
+    this.setState({
+      team_data: JSON.stringify(tempUser),
+    });
   };
 
   addUserToTeam = async myUser => {
@@ -222,14 +245,9 @@ class App extends Component {
     }
     if (foundDuplicate) {
       console.log('found duplicate');
-      this.setState({
-        alert: {
-          msg:
-            'Developer already in My Team, human cloning not currently implemented.',
-          type: 'light',
-        },
-      });
-      setTimeout(() => this.setState({ alert: null }), 5000);
+      this.setAlertDialog(
+        'Developer already in My Team, human cloning not currently implemented.'
+      );
     } else {
       let tempUser = [];
       tempUser = this.state.my_users.slice(0);
@@ -240,6 +258,9 @@ class App extends Component {
           tempUser2.push(this.state.users[i]);
         }
       }
+      this.setState({
+        team_data: JSON.stringify(tempUser),
+      });
       this.setState({ my_users: tempUser });
       this.setState({ users: tempUser2 });
     }
@@ -250,6 +271,18 @@ class App extends Component {
   setAlert = (msg, type) => {
     this.setState({ alert: { msg: msg, type: type } });
     setTimeout(() => this.setState({ alert: null }), 5000);
+  };
+
+  setAlertDialog = msg => {
+    this.setState({ alertOpen: true, alertMessage: msg, alertTitle: 'Error' });
+  };
+
+  setAlertToClosed = () => {
+    this.setState({ alertOpen: false });
+  };
+
+  onChange = e => {
+    this.setState({ [e.target.name]: e.target.value });
   };
 
   render() {
@@ -287,6 +320,12 @@ class App extends Component {
                       addUserToTeam={this.addUserToTeam}
                       onMyTeamPage={false}
                     />
+                    <AlertDialog
+                      alertOpen={this.state.alertOpen}
+                      setAlertToClosed={this.setAlertToClosed}
+                      alertMessage={this.state.alertMessage}
+                      alertTitle={this.state.alertTitle}
+                    />
                   </Fragment>
                 )}
               />
@@ -316,8 +355,18 @@ class App extends Component {
                       updateItemDynamoDB={this.updateItemDynamoDB}
                       deleteItemDynamoDB={this.deleteItemDynamoDB}
                       getItemDynamoDB={this.getItemDynamoDB}
+                      team_id={this.state.team_id}
+                      team_name={this.state.team_name}
+                      team_data={this.state.team_data}
+                      onChange={this.onChange}
                     />
                     <MyDynamoTable amazonResponse={amazonResponse} />
+                    <AlertDialog
+                      alertOpen={this.state.alertOpen}
+                      setAlertToClosed={this.setAlertToClosed}
+                      alertMessage={this.state.alertMessage}
+                      alertTitle={this.state.alertTitle}
+                    />
                   </Fragment>
                 )}
               />
