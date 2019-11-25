@@ -59,10 +59,14 @@ class FetchAWS extends Component {
   render() {
     return (
       <div>
-        <button
-          className='btn btn-light page-top-margin'
-          onClick={this.scanDynamoDB}
-        >
+        <h3 className='page-top-margin'>Dynamo Table Items</h3>
+        <p className='p'>
+          If you press scan you will see what teams are available. Enter the
+          team number and press get and the team members can be viewed under My
+          Team. Create a new team by entering: team id > 10, team name, and [ ]
+          for team data.
+        </p>
+        <button className='btn btn-light' onClick={this.scanDynamoDB}>
           Scan
         </button>
         <button className='btn btn-light' onClick={this.putItemDynamoDB}>
@@ -78,7 +82,7 @@ class FetchAWS extends Component {
           Get
         </button>
         <p className='input-aws-table-label'>
-          Team Id (Note: 0 to 10 are read only)
+          Team Id (Note: use only get for 0 to 10 they are write protected)
         </p>
         <input
           type='text'

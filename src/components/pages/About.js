@@ -6,20 +6,78 @@ const About = () => {
       <h2 className='page-top-margin'>About myDynamoDB</h2>
       <p className='p'>
         MyDynamoDB demonstrates using dynamoDB to save users that you select to
-        be part of my team. The users are picked from git hub.
+        be part of My Team. The users are picked from git hub.
       </p>
       <p className='p'>
-        The main purpose is to demonstrate how you could use dynamoDB to save
-        these users to a database.
+        The main purpose is to demonstrate a react app that uses API gateway,
+        lambda functions, and a dynamoDB database.
       </p>
       <p className='p'>
         The front end is in react. I started with a react project from Brad
         Traversy's tutorial which you can find at{' '}
-        <a href='https://www.udemy.com/share/101Xdq/'>udemy</a>.{' '}
+        <a href='https://www.udemy.com/share/101Xdq/'>udemy</a>. Then I added a
+        lot of new code. I liked brad's tutorial because it got you to a fun
+        react app quickly.
+      </p>
+
+      <h2 className=''>myDynamoDB API</h2>
+      <p className='p'>
+        Originally I was going to write my own RESTful service to connect to
+        dynamoDB.
+      </p>
+      <p className='p'>
+        After discussing this with some developers they suggested I try a lambda
+        function instead. I found a boiler plate for dynamoDB when setting up my
+        lambda function. It has only one header entry{' '}
+        <code>'Content-Type': 'application/json'</code>. If you want CORS you
+        need to add following headers to your lambda function.
+        <code className='hljs dos'>
+          {`'Access-Control-Allow-Origin': '*',,
+        `}
+          <br />
+          {`'Access-Control-Allow-Methods': 'GET,HEAD,OPTIONS,POST,PUT',
+          `}
+          <br />
+          {`'Access-Control-Allow-Headers': 'Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers',`}
+          <br />
+        </code>
+        Still even after this is it did not work. Most browsers send out an
+        OPTIONS request to test CORS so your server code has to return success
+        for OPTIONS. Then in my react app I had to add one last header as
+        follows.
+        <code className='hljs dos'>{`headers: {Accept: '*/*',}`}</code>
+      </p>
+      <p className='p'>
+        In this app I use POST with a JSON body for all dynamoDB methods. The
+        following JSON object is an example for dynamo.putItem.
+        <code className='hljs dos'>{`
+        {
+                myBody: {
+                  TableName: TableName,
+                  Item: {
+                     team_id: team_id,
+                     team_name: team_name,
+                     team_data: team_data,
+                   },
+                   ReturnConsumedCapacity: 'TOTAL',
+                 },
+                myMethod: 'putItem',
+              }
+            `}</code>
+        The API uses POST for security reasons because the query strings in a
+        URL can be logged on the server. Plus it is nice to use a JSON body for
+        all requests since it is easy to convert your class, data, etc to a JSON
+        string. <code>myMethod</code> defines what dynamoDB function to call.
+      </p>
+      <p className='p'>
+        All this code is available on my git hub account which you can find here{' '}
+        <a href='https://github.com/JimmySoftLLC/my-dynamodb-demo'>
+          my-dynamodb-demo .
+        </a>
       </p>
       <h2 className=''>Setting up dynamoDB locally</h2>
       <p className='p'>
-        Before provisioning at AWS it is important to run a development version
+        Before provisioning at AWS you might want to run a development version
         of dynamoDB. This way you can debug all your code locally for free.
         <a href='https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/DynamoDBLocal.DownloadingAndRunning.html'>
           {' '}
@@ -100,22 +158,6 @@ const About = () => {
         <a href='https://docs.aws.amazon.com/cli/latest/reference/dynamodb/index.html'>
           dynamoDB CLI reference
         </a>
-      </p>
-      <h2 className=''>myDynamoDB API</h2>
-      <p className='p'>
-        Originally I was going to write my own RESTful service to connect to
-        dynamoDB.
-      </p>
-      <p className='p'>
-        After discussing this with some developers at the DC code and coffee
-        they suggested I try a lambda function instead. AWS has is a nice
-        boilerplate that already exists in AWS when you set up a lamda function.
-        It connects the lamda endpoint to a API gateway and has crud code
-        already implemented.
-      </p>
-      <p className='p'>
-        Thats was easy part now to figure out the json body that AWS is
-        expecting for put, post, delete etc. Must dig into the documents!
       </p>
       <p className='p page-bottom-margin'></p>
     </Fragment>

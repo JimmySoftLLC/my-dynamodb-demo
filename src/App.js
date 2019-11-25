@@ -14,6 +14,8 @@ import axios from 'axios';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import './App.css';
 
+// const gitHubId = process.env.REACT_APP_GITHUB_CLIENT_ID
+// const gitHubSecret = process.env.REACT_APP_GITHUB_CLIENT_SECRET
 class App extends Component {
   state = {
     amazonResponse: ' ',
@@ -46,9 +48,9 @@ class App extends Component {
           '?q=' +
           text +
           '&client_id=' +
-          process.env.REACT_APP_GITHUB_CLIENT_ID +
+          gitHubId +
           '&client_secret=' +
-          process.env.REACT_APP_GITHUB_CLIENT_SECRET
+          gitHubSecret
       );
       this.setState({ users: res.data.items, loading: false });
     } catch (err) {
@@ -64,9 +66,9 @@ class App extends Component {
         'https://api.github.com/users/' +
           userName +
           '?client_id=' +
-          process.env.REACT_APP_GITHUB_CLIENT_ID +
+          gitHubId +
           '&client_secret=' +
-          process.env.REACT_APP_GITHUB_CLIENT_SECRET
+          gitHubSecret
       );
       this.setState({ user: res.data, loading: false });
     } catch (err) {
@@ -77,12 +79,17 @@ class App extends Component {
   scanDynamoDB = async TableName => {
     try {
       const res = await axios.post(
-        'https://22j5hgzvof.execute-api.us-east-1.amazonaws.com/production/restapi',
+        'https://yfyft0meu9.execute-api.us-east-1.amazonaws.com/default/restapi',
         {
           myBody: {
             TableName: TableName,
           },
           myMethod: 'scan',
+        },
+        {
+          headers: {
+            Accept: '*/*',
+          },
         }
       );
       console.log(res.data);
@@ -106,7 +113,7 @@ class App extends Component {
   putItemDynamoDB = async (TableName, team_id, team_name, team_data) => {
     try {
       const res = await axios.post(
-        'https://22j5hgzvof.execute-api.us-east-1.amazonaws.com/production/restapi',
+        'https://yfyft0meu9.execute-api.us-east-1.amazonaws.com/default/restapi',
         {
           myBody: {
             TableName: TableName,
@@ -118,6 +125,11 @@ class App extends Component {
             ReturnConsumedCapacity: 'TOTAL',
           },
           myMethod: 'putItem',
+        },
+        {
+          headers: {
+            Accept: '*/*',
+          },
         }
       );
       console.log(res.data);
@@ -132,7 +144,7 @@ class App extends Component {
   updateItemDynamoDB = async (TableName, team_id, team_name, team_data) => {
     try {
       const res = await axios.post(
-        'https://22j5hgzvof.execute-api.us-east-1.amazonaws.com/production/restapi',
+        'https://yfyft0meu9.execute-api.us-east-1.amazonaws.com/default/restapi',
         {
           myBody: {
             TableName: TableName,
@@ -144,6 +156,11 @@ class App extends Component {
             ReturnConsumedCapacity: 'TOTAL',
           },
           myMethod: 'putItem',
+        },
+        {
+          headers: {
+            Accept: '*/*',
+          },
         }
       );
       console.log(res.data);
@@ -158,7 +175,7 @@ class App extends Component {
   deleteItemDynamoDB = async (TableName, team_id) => {
     try {
       const res = await axios.post(
-        'https://22j5hgzvof.execute-api.us-east-1.amazonaws.com/production/restapi',
+        'https://yfyft0meu9.execute-api.us-east-1.amazonaws.com/default/restapi',
         {
           myMethod: 'deleteItem',
           myBody: {
@@ -166,6 +183,11 @@ class App extends Component {
             Key: {
               team_id: team_id,
             },
+          },
+        },
+        {
+          headers: {
+            Accept: '*/*',
           },
         }
       );
@@ -179,7 +201,7 @@ class App extends Component {
   getItemDynamoDB = async (TableName, team_id, team_name, team_data) => {
     try {
       const res = await axios.post(
-        'https://22j5hgzvof.execute-api.us-east-1.amazonaws.com/production/restapi',
+        'https://yfyft0meu9.execute-api.us-east-1.amazonaws.com/default/restapi',
         {
           myBody: {
             TableName: TableName,
@@ -189,6 +211,11 @@ class App extends Component {
             ReturnConsumedCapacity: 'TOTAL',
           },
           myMethod: 'getItem',
+        },
+        {
+          headers: {
+            Accept: '*/*',
+          },
         }
       );
       console.log(res.data);
@@ -212,9 +239,9 @@ class App extends Component {
           userName +
           '/repos?per_page=5&sort=created:asc' +
           '&client_id=' +
-          process.env.REACT_APP_GITHUB_CLIENT_ID +
+          gitHubId +
           '&client_secret=' +
-          process.env.REACT_APP_GITHUB_CLIENT_SECRET
+          gitHubSecret
       );
       this.setState({ repos: res.data, loading: false });
     } catch (err) {
@@ -340,6 +367,7 @@ class App extends Component {
                       removeUserFromTeam={this.removeUserFromTeam}
                       addUserToTeam={this.addUserToTeam}
                       onMyTeamPage={true}
+                      team_name={this.state.team_name}
                     />
                   </Fragment>
                 )}

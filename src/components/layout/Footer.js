@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 const Footer = props => {
   return (
     <footer className='footer bg-primary'>
-      <p>© JimmySoft LLC 2019</p>
       <ul>
         <li>
           <a

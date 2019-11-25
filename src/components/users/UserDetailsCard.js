@@ -32,7 +32,10 @@ export class User extends Component {
 
     return (
       <Fragment>
-        <Link to='/' className='btn btn-light page-top-margin'>
+        <Link to='/myTeam' className='btn btn-light page-top-margin'>
+          Back To My Team
+        </Link>
+        <Link to='/' className='btn btn-light'>
           Back To Find Developers
         </Link>
         Hireable: {''}
@@ -97,6 +100,7 @@ export class User extends Component {
           <div className='badge badge-light'>Public Repos: {public_repos}</div>
           <div className='badge badge-dark'>Public Gists: {public_gists}</div>
         </div>
+        <p className='p page-bottom-margin'></p>
       </Fragment>
     );
   }

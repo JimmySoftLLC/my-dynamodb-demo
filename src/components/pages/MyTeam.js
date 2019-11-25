@@ -6,13 +6,9 @@ const MyTeam = props => {
   console.log('testing at my team ' + props.onMyTeamPage);
   return (
     <Fragment>
-      <h2 className='page-top-margin'>My Project Team</h2>
+      <h2 className='page-top-margin'>My Project Team - {props.team_name}</h2>
       <p className='p'>
         Based on my search I have selected these developers to collaborate with.
-      </p>
-      <p className='p'>
-        The next step is to reach out to them and see what we can work on
-        together.
       </p>
       <div className='grid-4 page-bottom-margin '>
         {props.my_users.map(user => (
@@ -33,6 +29,7 @@ const MyTeam = props => {
 MyTeam.propTypes = {
   my_users: PropTypes.array.isRequired,
   onMyTeamPage: PropTypes.bool.isRequired,
+  team_name: PropTypes.string.isRequired,
 };
 
 export default MyTeam;

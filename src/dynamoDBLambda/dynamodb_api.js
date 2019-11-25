@@ -27,9 +27,10 @@ const dynamo = new doc.DynamoDB();
  *          myMethod: 'putItem',
  *        }
  *
- * I also had to add to get is to work with CORS
+ * I also had to add the following get is to work with CORS
  * 'Access-Control-Allow-Origin': '*',
- * 'Access-Control-Allow-Methods': "POST",
+ * 'Access-Control-Allow-Methods': "GET,HEAD,OPTIONS,POST,PUT",
+ * 'Access-Control-Allow-Headers': 'Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers'
  *
  */
 
@@ -41,31 +42,41 @@ exports.handler = (event, context, callback) => {
       headers: {
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'POST',
+        'Access-Control-Allow-Methods': 'GET,HEAD,OPTIONS,POST,PUT',
+        'Access-Control-Allow-Headers':
+          'Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers',
       },
     });
-  const lowestTeamNumber = 10;
+
+  const lowestTeamNumber = 10; // items 0 to 10 protected from writing, for the demo app
   switch (event.httpMethod) {
+    case 'OPTIONS':
+      const response = {
+        statusCode: 200,
+        body: 'CORS check passed safe to proceed',
+      };
+      done(null, response);
+      break;
     case 'POST':
       var myEventBody = JSON.parse(event.body);
       switch (myEventBody.myMethod) {
         case 'deleteItem':
           if (myEventBody.myBody.Key.team_id <= lowestTeamNumber) {
-            done(new Error(`Unsupported method "${event.httpMethod}"`));
+            done(new Error(`The team number is not in a valid range.  `));
           } else {
             dynamo.deleteItem(myEventBody.myBody, done);
           }
           break;
         case 'putItem':
           if (myEventBody.myBody.Item.team_id <= lowestTeamNumber) {
-            done(new Error(`Unsupported method "${event.httpMethod}"`));
+            done(new Error(`The team number is not in a valid range.  `));
           } else {
             dynamo.putItem(myEventBody.myBody, done);
           }
           break;
         case 'updateItem':
           if (myEventBody.myBody.Item.team_id <= lowestTeamNumber) {
-            done(new Error(`Unsupported method "${event.httpMethod}"`));
+            done(new Error(`The team number is not in a valid range.  `));
           } else {
             dynamo.updateItem(myEventBody.myBody, done);
           }
