@@ -11,11 +11,14 @@ import MyTeam from './components/pages/MyTeam';
 import MyDynamoTable from './components/pages/MyDynamoTable';
 import Footer from './components/layout/Footer';
 import axios from 'axios';
+import SelectTeamMenu from "./components/layout/SelectTeamMenu";
+
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import './App.css';
 
-// const gitHubId = process.env.REACT_APP_GITHUB_CLIENT_ID
-// const gitHubSecret = process.env.REACT_APP_GITHUB_CLIENT_SECRET
+const gitHubId = process.env.REACT_APP_GITHUB_CLIENT_ID;
+const gitHubSecret = process.env.REACT_APP_GITHUB_CLIENT_SECRET;
+
 class App extends Component {
   state = {
     amazonResponse: ' ',
@@ -25,16 +28,13 @@ class App extends Component {
     user: {},
     repos: [],
     my_users: [],
+    my_teams: [],
     alertOpen: false,
     alertMessage: ' ',
     alertTitle: ' ',
     team_id: 0,
     team_name: ' ',
     team_data: ' ',
-  };
-
-  onChange = e => {
-    this.setState({ [e.target.name]: e.target.value });
   };
 
   //search github users
@@ -96,7 +96,7 @@ class App extends Component {
       let myResData = res.data;
       let myMessage = 'Number of teams: ' + myResData.Count + '\n';
       myMessage += '----------------------\n';
-      for (var i = 0; i < myResData.Count; i++) {
+      for (let i = 0; i < myResData.Count; i++) {
         myMessage +=
           'Team: ' +
           myResData.Items[i].team_id +
@@ -105,8 +105,10 @@ class App extends Component {
           '\n';
       }
       this.setState({ amazonResponse: myMessage });
+      this.setState({ my_teams: myResData.Items });
     } catch (err) {
       this.setState({ amazonResponse: '' });
+      this.setState({ my_teams: [] });
     }
   };
 
@@ -136,7 +138,7 @@ class App extends Component {
       this.setState({ amazonResponse: JSON.stringify(res.data) });
     } catch (err) {
       this.setAlertDialog(
-        err.message + ' Make sure data is in all fields and of the right type.'
+        err.message + ' Put not completed because this team is write protected.'
       );
     }
   };
@@ -167,7 +169,7 @@ class App extends Component {
       this.setState({ amazonResponse: JSON.stringify(res.data) });
     } catch (err) {
       this.setAlertDialog(
-        err.message + ' Make sure data is in all fields and of the right type.'
+        err.message + ' Update not completed because this team is write protected.'
       );
     }
   };
@@ -198,7 +200,7 @@ class App extends Component {
     }
   };
 
-  getItemDynamoDB = async (TableName, team_id, team_name, team_data) => {
+  getItemDynamoDB = async (TableName, team_id) => {
     try {
       const res = await axios.post(
         'https://yfyft0meu9.execute-api.us-east-1.amazonaws.com/default/restapi',
@@ -221,6 +223,7 @@ class App extends Component {
       console.log(res.data);
       this.setState({
         amazonResponse: JSON.stringify(res.data),
+        team_id: res.data.Item.team_id,
         team_name: res.data.Item.team_name,
         team_data: res.data.Item.team_data,
         my_users: JSON.parse(res.data.Item.team_data),
@@ -276,8 +279,7 @@ class App extends Component {
         'Developer already in My Team, human cloning not currently implemented.'
       );
     } else {
-      let tempUser = [];
-      tempUser = this.state.my_users.slice(0);
+      let tempUser = this.state.my_users.slice(0);
       tempUser.push(myUser);
       let tempUser2 = [];
       for (var i = 0; i < this.state.users.length; i++) {
@@ -291,6 +293,10 @@ class App extends Component {
       this.setState({ my_users: tempUser });
       this.setState({ users: tempUser2 });
     }
+  };
+
+  my_func = () => {
+    console.log('activated my function');
   };
 
   clearUsers = () => this.setState({ users: [], loading: false });
@@ -330,14 +336,14 @@ class App extends Component {
               <Route
                 exact
                 path='/'
-                render={props => (
+                render={() => (
                   <Fragment>
                     <Alert alert={this.state.alert} />
                     <Search
                       setAlert={this.setAlert}
                       searchUsers={this.searchUsers}
                       clearUsers={this.clearUsers}
-                      showClear={users.length > 0 ? true : false}
+                      showClear={users.length > 0}
                     />
                     <Users
                       loading={loading}
@@ -360,14 +366,32 @@ class App extends Component {
               <Route
                 exact
                 path='/myTeam'
-                render={props => (
+                render={() => (
                   <Fragment>
+                    <SelectTeamMenu
+                      my_teams={this.state.my_teams}
+                      my_func={this.my_func}
+                      scanDynamoDB={this.scanDynamoDB}
+                      getItemDynamoDB={this.getItemDynamoDB}
+                      putItemDynamoDB={this.putItemDynamoDB}
+                      updateItemDynamoDB={this.updateItemDynamoDB}
+                      team_id={this.state.team_id}
+                      team_name={this.state.team_name}
+                      team_data={this.state.team_data}
+                    />
                     <MyTeam
                       my_users={my_users}
                       removeUserFromTeam={this.removeUserFromTeam}
                       addUserToTeam={this.addUserToTeam}
                       onMyTeamPage={true}
                       team_name={this.state.team_name}
+                      onChange={this.onChange}
+                    />
+                    <AlertDialog
+                        alertOpen={this.state.alertOpen}
+                        setAlertToClosed={this.setAlertToClosed}
+                        alertMessage={this.state.alertMessage}
+                        alertTitle={this.state.alertTitle}
                     />
                   </Fragment>
                 )}
@@ -375,7 +399,7 @@ class App extends Component {
               <Route
                 exact
                 path='/myDynamoTable'
-                render={props => (
+                render={() => (
                   <Fragment>
                     <FetchAWS
                       scanDynamoDB={this.scanDynamoDB}

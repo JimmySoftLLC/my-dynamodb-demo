@@ -33,10 +33,10 @@ export class User extends Component {
     return (
       <Fragment>
         <Link to='/myTeam' className='btn btn-light page-top-margin'>
-          Back To My Team
+          <i className="fas fa-arrow-left"></i> My Team
         </Link>
         <Link to='/' className='btn btn-light'>
-          Back To Find Developers
+          <i className="fas fa-arrow-left"></i> Find Developers
         </Link>
         Hireable: {''}
         {hireable ? (
