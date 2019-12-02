@@ -16,6 +16,7 @@ export class User extends Component {
 
   render() {
     const {
+      name,
       company,
       avatar_url,
       location,
@@ -52,6 +53,7 @@ export class User extends Component {
               alt=''
               style={{ width: '150px' }}
             />
+            <h3>{name}</h3>
             <p>Location: {location}</p>
           </div>
           <div>
@@ -102,6 +104,7 @@ export class User extends Component {
         </div>
         <p className='p page-bottom-margin'></p>
       </Fragment>
+
     );
   }
 }

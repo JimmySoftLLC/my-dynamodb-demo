@@ -16,9 +16,6 @@ import SelectTeamMenu from "./components/layout/SelectTeamMenu";
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import './App.css';
 
-const gitHubId = process.env.REACT_APP_GITHUB_CLIENT_ID;
-const gitHubSecret = process.env.REACT_APP_GITHUB_CLIENT_SECRET;
-
 class App extends Component {
   state = {
     amazonResponse: ' ',
@@ -39,7 +36,7 @@ class App extends Component {
 
   //search github users
   searchUsers = async text => {
-    //console.log(text);
+    console.log(process.env.REACT_APP_GITHUB_CLIENT_ID);
     this.setState({ loading: true });
     this.setState({ buttonType: false });
     try {
@@ -48,9 +45,9 @@ class App extends Component {
           '?q=' +
           text +
           '&client_id=' +
-          gitHubId +
+          process.env.REACT_APP_GITHUB_CLIENT_ID +
           '&client_secret=' +
-          gitHubSecret
+          process.env.REACT_APP_GITHUB_CLIENT_SECRET
       );
       this.setState({ users: res.data.items, loading: false });
     } catch (err) {
@@ -66,9 +63,9 @@ class App extends Component {
         'https://api.github.com/users/' +
           userName +
           '?client_id=' +
-          gitHubId +
+          process.env.REACT_APP_GITHUB_CLIENT_ID +
           '&client_secret=' +
-          gitHubSecret
+          process.env.REACT_APP_GITHUB_CLIENT_SECRET
       );
       this.setState({ user: res.data, loading: false });
     } catch (err) {
@@ -242,9 +239,9 @@ class App extends Component {
           userName +
           '/repos?per_page=5&sort=created:asc' +
           '&client_id=' +
-          gitHubId +
+          process.env.REACT_APP_GITHUB_CLIENT_ID +
           '&client_secret=' +
-          gitHubSecret
+          process.env.REACT_APP_GITHUB_CLIENT_SECRET
       );
       this.setState({ repos: res.data, loading: false });
     } catch (err) {
