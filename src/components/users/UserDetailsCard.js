@@ -29,6 +29,7 @@ export class User extends Component {
       public_repos,
       public_gists,
       hireable,
+      email,
     } = this.props.user;
 
     return (
@@ -89,8 +90,19 @@ export class User extends Component {
               <li>
                 {login && (
                   <Fragment>
-                    <strong>Website: {blog}</strong>
+                    <strong>Website: <
+                      a href = {blog}
+                      target='_blank'
+                      rel='noopener noreferrer'
+                    >{blog}</a> </strong>
                   </Fragment>
+                )}
+              </li>
+              <li>
+                {login && (
+                    <Fragment>
+                      <strong>Email: {email}</strong>
+                    </Fragment>
                 )}
               </li>
             </ul>

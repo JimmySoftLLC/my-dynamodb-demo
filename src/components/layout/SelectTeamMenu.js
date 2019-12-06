@@ -15,11 +15,11 @@ class SelectTeamMenu extends Component {
 
     static propTypes = {
         my_teams: PropTypes.array.isRequired,
-        my_func: PropTypes.func.isRequired,
         getItemDynamoDB: PropTypes.func.isRequired,
         scanDynamoDB: PropTypes.func.isRequired,
         updateItemDynamoDB: PropTypes.func.isRequired,
         putItemDynamoDB: PropTypes.func.isRequired,
+        setAlert: PropTypes.func.isRequired,
     };
 
     showTeamMenu = (event) => {
@@ -47,10 +47,20 @@ class SelectTeamMenu extends Component {
             this.props.putItemDynamoDB(
                 this.state.TableName,
                 randomInt,
-                this.props.team_name,
+                this.props.team_name + ' copy',
                 this.props.team_data
             );
+            setTimeout(() => this.scanDynamoDB(),1000);
+            setTimeout(() => this.getSelectedTeamWithId(randomInt),2000);
+            this.props.setAlert('waiting for eventually consistent reads', 'light', 2000);
         }
+    };
+
+    getSelectedTeamWithId = (id) => {
+        this.props.getItemDynamoDB(
+            this.state.TableName,
+            parseInt(id)
+        );
     };
 
     getSelectedTeam = (event) => {
@@ -72,6 +82,8 @@ class SelectTeamMenu extends Component {
             this.props.team_name,
             this.props.team_data
         );
+        setTimeout(() => this.scanDynamoDB(),1000);
+        this.props.setAlert('waiting for eventually consistent reads', 'light', 1000);
     };
 
     getLatestSelectedTeam = () => {
@@ -91,7 +103,7 @@ class SelectTeamMenu extends Component {
                 Scan teams
             </button>
             <button className='btn btn-light' onClick={this.putItemDynamoDB}>
-                New team
+                Copy team
             </button>
             <button className='btn btn-light' onClick={this.updateItemDynamoDB}>
                 Save
@@ -113,11 +125,6 @@ class SelectTeamMenu extends Component {
         </div>
     );}
 }
-
-SelectTeamMenu.propTypes = {
-    my_teams: PropTypes.array.isRequired,
-    my_func: PropTypes.func.isRequired,
-};
 
 export default SelectTeamMenu;
 

@@ -292,15 +292,11 @@ class App extends Component {
     }
   };
 
-  my_func = () => {
-    console.log('activated my function');
-  };
-
   clearUsers = () => this.setState({ users: [], loading: false });
 
-  setAlert = (msg, type) => {
+  setAlert = (msg, type, timeout) => {
     this.setState({ alert: { msg: msg, type: type } });
-    setTimeout(() => this.setState({ alert: null }), 5000);
+    setTimeout(() => this.setState({ alert: null }), timeout);
   };
 
   setAlertDialog = msg => {
@@ -365,9 +361,10 @@ class App extends Component {
                 path='/myTeam'
                 render={() => (
                   <Fragment>
+                    <Alert alert={this.state.alert} />
                     <SelectTeamMenu
+                      setAlert={this.setAlert}
                       my_teams={this.state.my_teams}
-                      my_func={this.my_func}
                       scanDynamoDB={this.scanDynamoDB}
                       getItemDynamoDB={this.getItemDynamoDB}
                       putItemDynamoDB={this.putItemDynamoDB}
