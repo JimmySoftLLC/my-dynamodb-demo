@@ -1,84 +1,67 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 
-class FetchAWS extends Component {
-  state = {
-    TableName: 'my_open_source_team',
+const FetchAWS = ({ team_id, team_name, team_data, setText,scanDynamoDB,putItemDynamoDB,updateItemDynamoDB,deleteItemDynamoDB,getItemDynamoDB,tableName }) => {
+
+const onChange = e => {
+    setText(e.target.name, e.target.value);
+};
+
+  const scanButtonPressed = () => {
+    scanDynamoDB(tableName);
   };
 
-  onChangeLocal = e => {
-    this.props.onChange(e);
-  };
-
-  static propTypes = {
-    scanDynamoDB: PropTypes.func.isRequired,
-    putItemDynamoDB: PropTypes.func.isRequired,
-    updateItemDynamoDB: PropTypes.func.isRequired,
-    deleteItemDynamoDB: PropTypes.func.isRequired,
-    getItemDynamoDB: PropTypes.func.isRequired,
-    onChange: PropTypes.func.isRequired,
-  };
-
-  scanDynamoDB = () => {
-    this.props.scanDynamoDB(this.state.TableName);
-  };
-
-  putItemDynamoDB = () => {
-    console.log('put command called  ' + this.state.TableName + 'team_id');
-    this.props.putItemDynamoDB(
-      this.state.TableName,
-      parseInt(this.props.team_id),
-      this.props.team_name,
-      this.props.team_data
+  const putButtonPressed = () => {
+    putItemDynamoDB(
+        tableName,
+      parseInt(team_id),
+      team_name,
+      team_data
     );
   };
 
-  updateItemDynamoDB = () => {
-    this.props.updateItemDynamoDB(
-      this.state.TableName,
-      parseInt(this.props.team_id),
-      this.props.team_name,
-      this.props.team_data
+  const updateButtonPressed = () => {
+    updateItemDynamoDB(
+        tableName,
+      parseInt(team_id),
+      team_name,
+      team_data
     );
   };
 
-  deleteItemDynamoDB = () => {
-    this.props.deleteItemDynamoDB(
-      this.state.TableName,
-      parseInt(this.props.team_id)
+  const deleteButtonPressed = () => {
+    deleteItemDynamoDB(
+        tableName,
+      parseInt(team_id)
     );
   };
 
-  getItemDynamoDB = () => {
-    this.props.getItemDynamoDB(
-      this.state.TableName,
-      parseInt(this.props.team_id)
+  const getButtonPressed = () => {
+    getItemDynamoDB(
+        tableName,
+      parseInt(team_id)
     );
   };
 
-  render() {
     return (
       <div>
         <h3 className='page-top-margin'>Dynamo Table Items</h3>
         <p className='p'>
-          If you press scan you will see what teams are available. Enter the
-          team number and press get and the team members can be viewed under My
-          Team. Create a new team by entering: team id > 10, team name, and [ ]
-          for team data.
+          Scan gives a list of items in the dynamoDB table. Team ID is the primary key.  Get will get the primary key entered. Put creates a new team using the primary key where Team id > 10, team name = some text, and team data = an empty array [ ].  Delete will delete the item.
         </p>
-        <button className='btn btn-light' onClick={this.scanDynamoDB}>
+        <button className='btn btn-light' onClick={scanButtonPressed}>
           Scan
         </button>
-        <button className='btn btn-light' onClick={this.putItemDynamoDB}>
+        <button className='btn btn-light' onClick={putButtonPressed}>
           Put
         </button>
-        <button className='btn btn-light' onClick={this.updateItemDynamoDB}>
+        <button className='btn btn-light' onClick={updateButtonPressed}>
           Update
         </button>
-        <button className='btn btn-light' onClick={this.deleteItemDynamoDB}>
+        <button className='btn btn-light' onClick={deleteButtonPressed}>
           Delete
         </button>
-        <button className='btn btn-light' onClick={this.getItemDynamoDB}>
+        <button className='btn btn-light' onClick={getButtonPressed}>
           Get
         </button>
         <p className='input-aws-table-label'>
@@ -88,8 +71,8 @@ class FetchAWS extends Component {
           type='text'
           name='team_id'
           placeholder='Team Id'
-          value={this.props.team_id}
-          onChange={this.onChangeLocal}
+          value={team_id}
+          onChange={onChange}
           className='input-aws-table'
         />
         <p className='input-aws-table-label'>Team Name</p>
@@ -97,23 +80,31 @@ class FetchAWS extends Component {
           type='text'
           name='team_name'
           placeholder='Team Name'
-          value={this.props.team_name}
-          onChange={this.onChangeLocal}
+          value={team_name}
+          onChange={onChange}
           className='input-aws-table'
         />
         <p className='input-aws-table-label'>Team Data (JSON string)</p>
         <textarea
-          type='text'
           name='team_data'
           rows='6'
           placeholder='Team Data'
-          value={this.props.team_data}
-          onChange={this.onChangeLocal}
+          value={team_data}
+          onChange={onChange}
           className='text-area-aws-table'
         />
       </div>
     );
-  }
-}
+};
+
+FetchAWS.propTypes = {
+    scanDynamoDB: PropTypes.func.isRequired,
+    putItemDynamoDB: PropTypes.func.isRequired,
+    updateItemDynamoDB: PropTypes.func.isRequired,
+    deleteItemDynamoDB: PropTypes.func.isRequired,
+    getItemDynamoDB: PropTypes.func.isRequired,
+    setText: PropTypes.func.isRequired,
+    tableName: PropTypes.string.isRequired,
+};
 
 export default FetchAWS;

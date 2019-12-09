@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React, { Fragment, useState } from 'react';
 import Navbar from './components/layout/Navbar';
 import Users from './components/users/Users';
 import FetchAWS from './components/users/FetchAWS';
@@ -16,29 +16,27 @@ import SelectTeamMenu from "./components/layout/SelectTeamMenu";
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import './App.css';
 
-class App extends Component {
-  state = {
-    amazonResponse: ' ',
-    users: [],
-    loading: false,
-    alert: null,
-    user: {},
-    repos: [],
-    my_users: [],
-    my_teams: [],
-    alertOpen: false,
-    alertMessage: ' ',
-    alertTitle: ' ',
-    team_id: 0,
-    team_name: ' ',
-    team_data: ' ',
-  };
+const App  = () => {
+  const [users, setUsers] = useState([]);
+  const [user, setUser] = useState({});
+  const [repos, setRepos] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [alert, setAlert] = useState(null);
+  const [amazonResponse, setAmazonResponse] = useState(' ');
+  const [my_users, setMy_users] = useState([]);
+  const [my_teams, setMy_teams] = useState([]);
+  const [alertOpen, setAlertOpen] = useState(false);
+  const [alertMessage, setAlertMessage] = useState(' ');
+  const [alertTitle, setAlertTitle] = useState(' ');
+  const [team_id, setTeam_id] = useState(0);
+  const [team_name, setTeam_name] = useState(' ');
+  const [team_data, setTeam_data] = useState(' ');
+  const [search_text, setSearch_text] = useState('');
+  const [tableName] = useState('my_open_source_team');
 
   //search github users
-  searchUsers = async text => {
-    console.log(process.env.REACT_APP_GITHUB_CLIENT_ID);
-    this.setState({ loading: true });
-    this.setState({ buttonType: false });
+  const searchUsers = async text => {
+    setLoading(true );
     try {
       const res = await axios.get(
         'https://api.github.com/search/users' +
@@ -49,15 +47,16 @@ class App extends Component {
           '&client_secret=' +
           process.env.REACT_APP_GITHUB_CLIENT_SECRET
       );
-      this.setState({ users: res.data.items, loading: false });
+      setUsers(res.data.items);
+      setLoading(false);
     } catch (err) {
-      this.setState({ users: [], loading: false });
+      setUsers([]) ;
+      setLoading(false );
     }
   };
 
-  getUser = async userName => {
-    this.setState({ loading: true });
-    this.setState({ buttonType: false });
+  const getUser = async userName => {
+    setLoading(true );
     try {
       const res = await axios.get(
         'https://api.github.com/users/' +
@@ -67,13 +66,15 @@ class App extends Component {
           '&client_secret=' +
           process.env.REACT_APP_GITHUB_CLIENT_SECRET
       );
-      this.setState({ user: res.data, loading: false });
+      setUser(res.data);
+      setLoading(false);
     } catch (err) {
-      this.setState({ user: {}, loading: false });
+      setUser({}) ;
+      setLoading(false );
     }
   };
 
-  scanDynamoDB = async TableName => {
+  const scanDynamoDB = async TableName => {
     try {
       const res = await axios.post(
         'https://yfyft0meu9.execute-api.us-east-1.amazonaws.com/default/restapi',
@@ -89,7 +90,6 @@ class App extends Component {
           },
         }
       );
-      console.log(res.data);
       let myResData = res.data;
       let myMessage = 'Number of teams: ' + myResData.Count + '\n';
       myMessage += '----------------------\n';
@@ -101,15 +101,15 @@ class App extends Component {
           myResData.Items[i].team_name +
           '\n';
       }
-      this.setState({ amazonResponse: myMessage });
-      this.setState({ my_teams: myResData.Items });
+      setAmazonResponse(myMessage);
+      setMy_teams(myResData.Items);
     } catch (err) {
-      this.setState({ amazonResponse: '' });
-      this.setState({ my_teams: [] });
+      setAmazonResponse('');
+      setMy_teams([]);
     }
   };
 
-  putItemDynamoDB = async (TableName, team_id, team_name, team_data) => {
+  const putItemDynamoDB = async (TableName, team_id, team_name, team_data) => {
     try {
       const res = await axios.post(
         'https://yfyft0meu9.execute-api.us-east-1.amazonaws.com/default/restapi',
@@ -131,16 +131,15 @@ class App extends Component {
           },
         }
       );
-      console.log(res.data);
-      this.setState({ amazonResponse: JSON.stringify(res.data) });
+      setAmazonResponse(JSON.stringify(res.data));
     } catch (err) {
-      this.setAlertDialog(
+      setAlertDialog(
         err.message + ' Put not completed because this team is write protected.'
       );
     }
   };
 
-  updateItemDynamoDB = async (TableName, team_id, team_name, team_data) => {
+  const updateItemDynamoDB = async (TableName, team_id, team_name, team_data) => {
     try {
       const res = await axios.post(
         'https://yfyft0meu9.execute-api.us-east-1.amazonaws.com/default/restapi',
@@ -162,16 +161,15 @@ class App extends Component {
           },
         }
       );
-      console.log(res.data);
-      this.setState({ amazonResponse: JSON.stringify(res.data) });
+      setAmazonResponse(JSON.stringify(res.data));
     } catch (err) {
-      this.setAlertDialog(
+      setAlertDialog(
         err.message + ' Update not completed because this team is write protected.'
       );
     }
   };
 
-  deleteItemDynamoDB = async (TableName, team_id) => {
+  const deleteItemDynamoDB = async (TableName, team_id) => {
     try {
       const res = await axios.post(
         'https://yfyft0meu9.execute-api.us-east-1.amazonaws.com/default/restapi',
@@ -190,136 +188,142 @@ class App extends Component {
           },
         }
       );
-      console.log(res.data);
-      this.setState({ amazonResponse: JSON.stringify(res.data) });
+      setAmazonResponse(JSON.stringify(res.data));
     } catch (err) {
-      this.setAlertDialog(err.message);
+      setAlertDialog(err.message);
     }
   };
 
-  getItemDynamoDB = async (TableName, team_id) => {
+  const getItemDynamoDB = async (TableName, team_id) => {
     try {
       const res = await axios.post(
-        'https://yfyft0meu9.execute-api.us-east-1.amazonaws.com/default/restapi',
-        {
-          myBody: {
-            TableName: TableName,
-            Key: {
-              team_id: team_id,
+          'https://yfyft0meu9.execute-api.us-east-1.amazonaws.com/default/restapi',
+          {
+            myBody: {
+              TableName: TableName,
+              Key: {
+                team_id: team_id,
+              },
+              ReturnConsumedCapacity: 'TOTAL',
             },
-            ReturnConsumedCapacity: 'TOTAL',
+            myMethod: 'getItem',
           },
-          myMethod: 'getItem',
-        },
-        {
-          headers: {
-            Accept: '*/*',
-          },
-        }
+          {
+            headers: {
+              Accept: '*/*',
+            },
+          }
       );
-      console.log(res.data);
-      this.setState({
-        amazonResponse: JSON.stringify(res.data),
-        team_id: res.data.Item.team_id,
-        team_name: res.data.Item.team_name,
-        team_data: res.data.Item.team_data,
-        my_users: JSON.parse(res.data.Item.team_data),
-      });
+      setAmazonResponse(JSON.stringify(res.data));
+      setTeam_id(res.data.Item.team_id);
+      setTeam_name(res.data.Item.team_name);
+      setTeam_data(res.data.Item.team_data);
+      setMy_users(JSON.parse(res.data.Item.team_data))
     } catch (err) {
-      this.setAlertDialog(err.message);
+      setAlertDialog(err.message);
     }
   };
 
-  getUserRepos = async userName => {
-    this.setState({ loading: true });
-    this.setState({ buttonType: false });
+  const getUserRepos = async userName => {
+    setLoading(true );
+    setRepos([]);
     try {
       const res = await axios.get(
-        'https://api.github.com/users/' +
+          'https://api.github.com/users/' +
           userName +
-          '/repos?per_page=5&sort=created:asc' +
+          '/repos?per_page=20&sort=created:asc' +
           '&client_id=' +
           process.env.REACT_APP_GITHUB_CLIENT_ID +
           '&client_secret=' +
           process.env.REACT_APP_GITHUB_CLIENT_SECRET
       );
-      this.setState({ repos: res.data, loading: false });
+      setRepos(res.data);
+      setLoading(false);
     } catch (err) {
-      this.setState({ repos: {}, loading: false });
+      setRepos([]);
+      setLoading(false);
     }
   };
 
-  removeUserFromTeam = async login => {
-    console.log('Remove item: ' + login);
+  const removeUserFromTeam = async login => {
     let tempUser = [];
-    for (var i = 0; i < this.state.my_users.length; i++) {
-      if (this.state.my_users[i].login !== login) {
-        tempUser.push(this.state.my_users[i]);
+    for (var i = 0; i < my_users.length; i++) {
+      if (my_users[i].login !== login) {
+        tempUser.push(my_users[i]);
       }
     }
-    this.setState({ my_users: tempUser });
-    this.setState({
-      team_data: JSON.stringify(tempUser),
-    });
+    setMy_users( tempUser );
+    setTeam_data(JSON.stringify(tempUser));
   };
 
-  addUserToTeam = async myUser => {
+  const addUserToTeam = async myUser => {
     let foundDuplicate = false;
-    for (var j = 0; j < this.state.my_users.length; j++) {
-      if (this.state.my_users[j].login === myUser.login) {
+    for (var j = 0; j < my_users.length; j++) {
+      if (my_users[j].login === myUser.login) {
         foundDuplicate = true;
       }
     }
     if (foundDuplicate) {
-      console.log('found duplicate');
-      this.setAlertDialog(
+      setAlertDialog(
         'Developer already in My Team, human cloning not currently implemented.'
       );
     } else {
-      let tempUser = this.state.my_users.slice(0);
+      let tempUser = my_users.slice(0);
       tempUser.push(myUser);
       let tempUser2 = [];
-      for (var i = 0; i < this.state.users.length; i++) {
-        if (this.state.users[i].login !== myUser.login) {
-          tempUser2.push(this.state.users[i]);
+      for (var i = 0; i < users.length; i++) {
+        if (users[i].login !== myUser.login) {
+          tempUser2.push(users[i]);
         }
       }
-      this.setState({
-        team_data: JSON.stringify(tempUser),
-      });
-      this.setState({ my_users: tempUser });
-      this.setState({ users: tempUser2 });
+      setTeam_data(JSON.stringify(tempUser));
+      setMy_users(tempUser);
+      setUsers(tempUser2);
     }
   };
 
-  clearUsers = () => this.setState({ users: [], loading: false });
-
-  setAlert = (msg, type, timeout) => {
-    this.setState({ alert: { msg: msg, type: type } });
-    setTimeout(() => this.setState({ alert: null }), timeout);
+  const clearUsers = () => {
+    setUsers([]);
+    setLoading (false);
   };
 
-  setAlertDialog = msg => {
-    this.setState({ alertOpen: true, alertMessage: msg, alertTitle: 'Error' });
+  const showAlert = (msg, type, timeout) => {
+    setAlert( { msg: msg, type: type } );
+    setTimeout(() => setAlert(null ), timeout);
   };
 
-  setAlertToClosed = () => {
-    this.setState({ alertOpen: false });
+  const setAlertDialog = msg => {
+    setAlertOpen(true);
+    setAlertMessage(msg);
+    setAlertTitle('Error');
   };
 
-  onChange = e => {
-    this.setState({ [e.target.name]: e.target.value });
+  const setAlertToClosed = () => {
+    setAlertOpen(false);
   };
 
-  render() {
-    const {
-      users,
-      loading,
-      user,
-      repos,
-      my_users,
-      amazonResponse,
-    } = this.state;
+  const setText = (name,value) => {
+    switch (name) {
+      case 'team_name':
+        setTeam_name(value);
+        break;
+      case 'team_id':
+        setTeam_id(value);
+        break;
+      case 'team_data':
+        setTeam_data(value);
+        break;
+      case 'search_text':
+        setSearch_text(value);
+        break;
+      default:
+    }
+  };
+
+  const sendEmailToDevelopers = (team_id) => {
+    console.log ("team id: " + team_id);
+  };
+
     return (
       <Router>
         <div className='App'>
@@ -331,26 +335,28 @@ class App extends Component {
                 path='/'
                 render={() => (
                   <Fragment>
-                    <Alert alert={this.state.alert} />
+                    <Alert alert={alert} />
                     <Search
-                      setAlert={this.setAlert}
-                      searchUsers={this.searchUsers}
-                      clearUsers={this.clearUsers}
-                      showClear={users.length > 0}
+                      setAlert={showAlert}
+                      searchUsers={searchUsers}
+                      clearUsers={clearUsers}
+                      showClear={users.length > 0 ? true : false}
+                      search_text={search_text}
+                      setText={setText}
                     />
                     <Users
                       loading={loading}
                       users={users}
                       my_users={my_users}
-                      removeUserFromTeam={this.removeUserFromTeam}
-                      addUserToTeam={this.addUserToTeam}
+                      removeUserFromTeam={removeUserFromTeam}
+                      addUserToTeam={addUserToTeam}
                       onMyTeamPage={false}
                     />
                     <AlertDialog
-                      alertOpen={this.state.alertOpen}
-                      setAlertToClosed={this.setAlertToClosed}
-                      alertMessage={this.state.alertMessage}
-                      alertTitle={this.state.alertTitle}
+                      alertOpen={alertOpen}
+                      setAlertToClosed={setAlertToClosed}
+                      alertMessage={alertMessage}
+                      alertTitle={alertTitle}
                     />
                   </Fragment>
                 )}
@@ -361,31 +367,33 @@ class App extends Component {
                 path='/myTeam'
                 render={() => (
                   <Fragment>
-                    <Alert alert={this.state.alert} />
+                    <Alert alert={alert} />
                     <SelectTeamMenu
-                      setAlert={this.setAlert}
-                      my_teams={this.state.my_teams}
-                      scanDynamoDB={this.scanDynamoDB}
-                      getItemDynamoDB={this.getItemDynamoDB}
-                      putItemDynamoDB={this.putItemDynamoDB}
-                      updateItemDynamoDB={this.updateItemDynamoDB}
-                      team_id={this.state.team_id}
-                      team_name={this.state.team_name}
-                      team_data={this.state.team_data}
+                      setAlert={showAlert}
+                      my_teams={my_teams}
+                      scanDynamoDB={scanDynamoDB}
+                      getItemDynamoDB={getItemDynamoDB}
+                      putItemDynamoDB={putItemDynamoDB}
+                      updateItemDynamoDB={updateItemDynamoDB}
+                      sendEmailToDevelopers={sendEmailToDevelopers}
+                      team_id={team_id}
+                      team_name={team_name}
+                      team_data={team_data}
+                      tableName={tableName}
                     />
                     <MyTeam
                       my_users={my_users}
-                      removeUserFromTeam={this.removeUserFromTeam}
-                      addUserToTeam={this.addUserToTeam}
+                      removeUserFromTeam={removeUserFromTeam}
+                      addUserToTeam={addUserToTeam}
                       onMyTeamPage={true}
-                      team_name={this.state.team_name}
-                      onChange={this.onChange}
+                      team_name={team_name}
+                      setText={setText}
                     />
                     <AlertDialog
-                        alertOpen={this.state.alertOpen}
-                        setAlertToClosed={this.setAlertToClosed}
-                        alertMessage={this.state.alertMessage}
-                        alertTitle={this.state.alertTitle}
+                        alertOpen={alertOpen}
+                        setAlertToClosed={setAlertToClosed}
+                        alertMessage={alertMessage}
+                        alertTitle={alertTitle}
                     />
                   </Fragment>
                 )}
@@ -396,22 +404,23 @@ class App extends Component {
                 render={() => (
                   <Fragment>
                     <FetchAWS
-                      scanDynamoDB={this.scanDynamoDB}
-                      putItemDynamoDB={this.putItemDynamoDB}
-                      updateItemDynamoDB={this.updateItemDynamoDB}
-                      deleteItemDynamoDB={this.deleteItemDynamoDB}
-                      getItemDynamoDB={this.getItemDynamoDB}
-                      team_id={this.state.team_id}
-                      team_name={this.state.team_name}
-                      team_data={this.state.team_data}
-                      onChange={this.onChange}
+                        tableName={tableName}
+                      scanDynamoDB={scanDynamoDB}
+                      putItemDynamoDB={putItemDynamoDB}
+                      updateItemDynamoDB={updateItemDynamoDB}
+                      deleteItemDynamoDB={deleteItemDynamoDB}
+                      getItemDynamoDB={getItemDynamoDB}
+                      team_id={team_id}
+                      team_name={team_name}
+                      team_data={team_data}
+                      setText={setText}
                     />
                     <MyDynamoTable amazonResponse={amazonResponse} />
                     <AlertDialog
-                      alertOpen={this.state.alertOpen}
-                      setAlertToClosed={this.setAlertToClosed}
-                      alertMessage={this.state.alertMessage}
-                      alertTitle={this.state.alertTitle}
+                      alertOpen={alertOpen}
+                      setAlertToClosed={setAlertToClosed}
+                      alertMessage={alertMessage}
+                      alertTitle={alertTitle}
                     />
                   </Fragment>
                 )}
@@ -422,8 +431,8 @@ class App extends Component {
                 render={props => (
                   <UserDetailsCard
                     {...props}
-                    getUser={this.getUser}
-                    getUserRepos={this.getUserRepos}
+                    getUser={getUser}
+                    getUserRepos={getUserRepos}
                     user={user}
                     repos={repos}
                     loading={loading}
@@ -436,7 +445,6 @@ class App extends Component {
         </div>
       </Router>
     );
-  }
-}
+};
 
 export default App;

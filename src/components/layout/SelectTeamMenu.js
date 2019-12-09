@@ -1,33 +1,22 @@
-import React, {Component} from 'react';
+import React, {useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 
-class SelectTeamMenu extends Component {
-    componentDidMount() {
-        this.scanDynamoDB();
-    }
+const SelectTeamMenu = ({my_teams,team_name,team_data,setAlert,getItemDynamoDB,team_id,scanDynamoDB,putItemDynamoDB, updateItemDynamoDB, tableName,sendEmailToDevelopers}) => {
+    useEffect(() => {
+        // in place of component did mount
+        scanTeamsButtonPressed();
+        // eslint-disable-next-line
+    }, []);
 
-    state = {
-        anchorEl: null,
-        TableName: 'my_open_source_team',
+    const [anchorEl, setAnchorEl] = useState(null);
+
+    const showTeamMenu = (event) => {
+        setAnchorEl(event.currentTarget);
     };
 
-    static propTypes = {
-        my_teams: PropTypes.array.isRequired,
-        getItemDynamoDB: PropTypes.func.isRequired,
-        scanDynamoDB: PropTypes.func.isRequired,
-        updateItemDynamoDB: PropTypes.func.isRequired,
-        putItemDynamoDB: PropTypes.func.isRequired,
-        setAlert: PropTypes.func.isRequired,
-    };
-
-    showTeamMenu = (event) => {
-        this.setState({ anchorEl: event.currentTarget });
-    };
-
-    putItemDynamoDB = () => {
-        console.log('put command called  ' + this.state.TableName + 'team_id');
+    const copyTeamButtonPressed = () => {
         let foundUniqueId = false;
         let spillOutIndex = 0;
         let randomInt = 0;
@@ -35,96 +24,118 @@ class SelectTeamMenu extends Component {
             spillOutIndex ++;
             if (spillOutIndex > 150) break;
             randomInt = Math.floor(Math.random() * (100 - 11)) + 11;
-            console.log(randomInt);
-            for (let i = 0; i < this.props.my_teams.length; i++) {
-               if (randomInt === this.props.my_teams[i].team_id ) break;
-               if (i === this.props.my_teams.length-1) {
+            for (let i = 0; i < my_teams.length; i++) {
+               if (randomInt === my_teams[i].team_id ) break;
+               if (i === my_teams.length-1) {
                    foundUniqueId=true;
                }
             }
         }
         if (foundUniqueId===true) {
-            this.props.putItemDynamoDB(
-                this.state.TableName,
+            putItemDynamoDB(
+                tableName,
                 randomInt,
-                this.props.team_name + ' copy',
-                this.props.team_data
+                team_name + ' copy',
+                team_data
             );
-            setTimeout(() => this.scanDynamoDB(),1000);
-            setTimeout(() => this.getSelectedTeamWithId(randomInt),2000);
-            this.props.setAlert('waiting for eventually consistent reads', 'light', 2000);
+            setTimeout(() => scanTeamsButtonPressed(),1000);
+            setTimeout(() => getUpdates(randomInt),2000);
+            setAlert('waiting for eventually consistent reads', 'light', 2000);
         }
     };
 
-    getSelectedTeamWithId = (id) => {
-        this.props.getItemDynamoDB(
-            this.state.TableName,
+    const getUpdates = (id) => {
+        getItemDynamoDB(
+            tableName,
             parseInt(id)
         );
     };
 
-    getSelectedTeam = (event) => {
-        this.props.getItemDynamoDB(
-            this.state.TableName,
+    const menuItemSelectedGetUpdates = (event) => {
+        getItemDynamoDB(
+            tableName,
             parseInt(event.currentTarget.id)
         );
-        this.setState({ anchorEl: null });
+        setAnchorEl(null);
     };
 
-    scanDynamoDB = () => {
-        this.props.scanDynamoDB(this.state.TableName);
+    const scanTeamsButtonPressed = () => {
+        scanDynamoDB(tableName);
     };
 
-    updateItemDynamoDB = () => {
-        this.props.updateItemDynamoDB(
-            this.state.TableName,
-            parseInt(this.props.team_id),
-            this.props.team_name,
-            this.props.team_data
+    const saveButtonPressed = () => {
+        updateItemDynamoDB(
+            tableName,
+            parseInt(team_id),
+            team_name,
+            team_data
         );
-        setTimeout(() => this.scanDynamoDB(),1000);
-        this.props.setAlert('waiting for eventually consistent reads', 'light', 1000);
+        setTimeout(() => scanTeamsButtonPressed(),1000);
+        setAlert('waiting for eventually consistent reads', 'light', 1000);
     };
 
-    getLatestSelectedTeam = () => {
-        this.props.getItemDynamoDB(
-            this.state.TableName,
-            parseInt(this.props.team_id)
+    const getUpdateButtonPressed = () => {
+        getItemDynamoDB(
+            tableName,
+            parseInt(team_id)
         );
     };
 
-    render() {
-        return (
+    const sendEmailButtonPressed = () => {
+        sendEmailToDevelopers(
+            parseInt(team_id)
+        );
+    };
+
+    const clickedOffMenu = () => {
+        setAnchorEl(null);
+    };
+
+    return (
         <div>
-            <button className='btn btn-light page-top-margin' onClick={this.showTeamMenu}>
+            <button className='btn btn-light page-top-margin' onClick={showTeamMenu}>
                 Select team
             </button>
-            <button className='btn btn-light' onClick={this.scanDynamoDB}>
+            <button className='btn btn-light' onClick={scanTeamsButtonPressed}>
                 Scan teams
             </button>
-            <button className='btn btn-light' onClick={this.putItemDynamoDB}>
+            <button className='btn btn-light' onClick={copyTeamButtonPressed}>
                 Copy team
             </button>
-            <button className='btn btn-light' onClick={this.updateItemDynamoDB}>
+            <button className='btn btn-light' onClick={saveButtonPressed}>
                 Save
             </button>
-            <button className='btn btn-light' onClick={this.getLatestSelectedTeam}>
+            <button className='btn btn-light' onClick={getUpdateButtonPressed}>
                 Get updates
+            </button>
+            <button className='btn btn-light' onClick={sendEmailButtonPressed}>
+                Send Email
             </button>
             <Menu
                 id="simple-menu"
-                anchorEl={this.state.anchorEl}
+                anchorEl={anchorEl}
                 keepMounted
-                open={Boolean(this.state.anchorEl)}
-                onClose={this.getItemDynamoDB}
+                open={Boolean(anchorEl)}
+                onClose={clickedOffMenu}
             >
-                {this.props.my_teams.map(team => (
-                    <MenuItem key={team.team_id} id={team.team_id} onClick={this.getSelectedTeam}>{team.team_name}</MenuItem>
+                {my_teams.map(team => (
+                    <MenuItem key={team.team_id} id={team.team_id} onClick={menuItemSelectedGetUpdates}>{team.team_name}</MenuItem>
                 ))}
             </Menu>
         </div>
-    );}
-}
+    );
+};
+
+SelectTeamMenu.propTypes = {
+    my_teams: PropTypes.array.isRequired,
+    getItemDynamoDB: PropTypes.func.isRequired,
+    scanDynamoDB: PropTypes.func.isRequired,
+    updateItemDynamoDB: PropTypes.func.isRequired,
+    putItemDynamoDB: PropTypes.func.isRequired,
+    setAlert: PropTypes.func.isRequired,
+    tableName: PropTypes.string.isRequired,
+    sendEmailToDevelopers: PropTypes.func.isRequired,
+};
 
 export default SelectTeamMenu;
 

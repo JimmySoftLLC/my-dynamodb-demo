@@ -1,50 +1,46 @@
-import React, {Component, Fragment} from 'react';
+import React, {Fragment} from 'react';
 import UserSummaryCard from '../users/UserSummaryCard';
 import PropTypes from 'prop-types';
 
-class MyTeam extends Component {
-    static propTypes = {
-        my_users: PropTypes.array.isRequired,
-        onMyTeamPage: PropTypes.bool.isRequired,
-        team_name: PropTypes.string.isRequired,
-        onChange: PropTypes.func.isRequired,
+const MyTeam = ({my_users,onMyTeamPage,removeUserFromTeam,addUserToTeam,setText,team_name}) => {
+    const onChange = e => {
+        setText(e.target.name, e.target.value);
     };
-
-    onChangeLocal = e => {
-        this.props.onChange(e);
-    };
-
-    render() {
-        return (
-            <Fragment>
-                <h3>My Project Team
-                    <input
-                        type='text'
-                        name='team_name'
-                        placeholder='Team Name'
-                        value={this.props.team_name}
-                        onChange={this.onChangeLocal}
-                        className='input-aws-table'
+    return (
+        <Fragment>
+            <h3>My Project Team
+                <input
+                    type='text'
+                    name='team_name'
+                    placeholder='Team Name'
+                    value={team_name}
+                    onChange={onChange}
+                    className='input-aws-table'
+                />
+            </h3>
+            <p className='p'>
+                Based on my search I have selected these developers to collaborate with.
+            </p>
+            <div className='grid-4 page-bottom-margin '>
+                {my_users.map(user => (
+                    <UserSummaryCard
+                        key={user.id}
+                        user={user}
+                        onMyTeamPage={onMyTeamPage}
+                        removeUserFromTeam={removeUserFromTeam}
+                        addUserToTeam={addUserToTeam}
                     />
-                </h3>
-                <p className='p'>
-                    Based on my search I have selected these developers to collaborate with.
-                </p>
-                <div className='grid-4 page-bottom-margin '>
-                    {this.props.my_users.map(user => (
-                        <UserSummaryCard
-                            key={user.id}
-                            user={user}
-                            my_users={this.props.my_users}
-                            onMyTeamPage={this.props.onMyTeamPage}
-                            removeUserFromTeam={this.props.removeUserFromTeam}
-                            addUserToTeam={this.props.addUserToTeam}
-                        />
-                    ))}
-                </div>
-            </Fragment>
-        );
-    };
-}
+                ))}
+            </div>
+        </Fragment>
+    );
+};
+
+MyTeam.propTypes = {
+    my_users: PropTypes.array.isRequired,
+    onMyTeamPage: PropTypes.bool.isRequired,
+    team_name: PropTypes.string.isRequired,
+    setText: PropTypes.func.isRequired,
+};
 
 export default MyTeam;

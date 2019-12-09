@@ -1,55 +1,60 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
-export class UserSummaryCard extends Component {
-  static propTypes = {
-    user: PropTypes.object.isRequired,
-    removeUserFromTeam: PropTypes.func.isRequired,
-    addUserToTeam: PropTypes.func.isRequired,
-  };
+const UserSummaryCard = ({ user, onMyTeamPage, removeUserFromTeam, addUserToTeam }) => {
 
-  removeUser = () => {
+  const removeUser = () => {
     //console.log('remove user operation');
-    this.props.removeUserFromTeam(this.props.user.login);
+    removeUserFromTeam(login);
   };
 
-  addUser = () => {
+  const addUser = () => {
     //console.log('add user operation');
-    this.props.addUserToTeam(this.props.user);
+    addUserToTeam(user);
   };
 
-  render() {
+    const {
+        avatar_url,
+        login,
+    } = user;
+
+
     return (
       <div className='card text-center'>
         <img
-          src={this.props.user.avatar_url}
+          src={avatar_url}
           alt=''
           className='round-img'
           style={{ width: '120px' }}
         />
-        <h3>{this.props.user.login}</h3>
+        <h3>{login}</h3>
         <Link
-          to={'/user/' + this.props.user.login}
+          to={'/user/' + login}
           className='btn btn-dark btn-sm my-1'
         >
           More info
         </Link>{' '}
-        {this.props.onMyTeamPage ? (
+        {onMyTeamPage ? (
           <button
             className='btn btn-dark btn-sm my-1'
-            onClick={this.removeUser}
+            onClick={removeUser}
           >
             Remove
           </button>
         ) : (
-          <button className='btn btn-dark btn-sm my-1' onClick={this.addUser}>
+          <button className='btn btn-dark btn-sm my-1' onClick={addUser}>
             Add
           </button>
         )}
       </div>
     );
-  }
-}
+};
+
+UserSummaryCard.propTypes = {
+    user: PropTypes.object.isRequired,
+    removeUserFromTeam: PropTypes.func.isRequired,
+    addUserToTeam: PropTypes.func.isRequired,
+};
 
 export default UserSummaryCard;
