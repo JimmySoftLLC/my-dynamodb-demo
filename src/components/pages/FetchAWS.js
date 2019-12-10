@@ -46,9 +46,18 @@ const onChange = e => {
     return (
       <div>
         <h3 className='page-top-margin'>Dynamo Table Items</h3>
+      <p className='p'>
+          This page shows you the raw data from dynamodDB on AWS.
+          One interesting thing you will notice is that the capacity units are much larger to write
+          vs. read.  This is something you should be aware of when considering dynamoDB for
+          your project.  Writes are costly.  Reads are fast.
+      </p>
         <p className='p'>
-          Scan gives a list of items in the dynamoDB table. Team ID is the primary key.  Get will get the primary key entered. Put creates a new team using the primary key where Team id > 10, team name = some text, and team data = an empty array [ ].  Delete will delete the item.
+          Scan lists the items.  Put, Update, Delete and Get acts on the Team Id.
         </p>
+      <p className='p'>
+           Note: New entries shall follow the following: id > 10, team name = some text, and team data = an empty array [ ].
+      </p>
         <button className='btn btn-light' onClick={scanButtonPressed}>
           Scan
         </button>
@@ -65,7 +74,7 @@ const onChange = e => {
           Get
         </button>
         <p className='input-aws-table-label'>
-          Team Id (Note: use only get for 0 to 10 they are write protected)
+          Team Id (Primary key: items 0 to 10 are write protected)
         </p>
         <input
           type='text'

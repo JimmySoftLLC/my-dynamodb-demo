@@ -5,21 +5,20 @@ const About = () => {
     <Fragment>
       <h2 className='page-top-margin'>About myDynamoDB</h2>
       <p className='p'>
-        MyDynamoDB demonstrates using dynamoDB to save users that you select to
-        be part of My Team. The users are picked from git hub.
+        MyDynamoDB is a react app that saves github user data to a database using API gateway,
+        lambda functions, and a dynamoDB database. The user data comes from github using the github API.
       </p>
       <p className='p'>
-        The main purpose is to demonstrate a react app that uses API gateway,
-        lambda functions, and a dynamoDB database.
-      </p>
-      <p className='p'>
-        The front end is in react. I started with a react project from Brad
+        The front end is roughly based on a react project from Brad
         Traversy's tutorial which you can find at{' '}
-        <a href='https://www.udemy.com/share/101Xdq/'>udemy</a>. Then I added a
-        lot of new code. I liked brad's tutorial because it got you to a fun
-        react app quickly.
+        <a href='https://www.udemy.com/share/101Xdq/'>udemy</a>. Then I changed it to fit my needs.
       </p>
-
+      <p className='p'>
+        I also have a blog post that goes into detail on setting up a dynamoDB database, API gateway and lambda functions. You can find it at {'  '}
+        <a href='https://www.mysoftwarejourney.com/2019/11/19/serverless-is-awesome/'>
+          mysoftwarejourney.com
+        </a>
+      </p>
       <h2 className=''>myDynamoDB API</h2>
       <p className='p'>
         Originally I was going to write my own RESTful service to connect to

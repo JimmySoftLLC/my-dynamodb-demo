@@ -4,7 +4,6 @@ import Spinner from '../layout/Spinner';
 import PropTypes from 'prop-types';
 
 const Users = props => {
-  console.log('testing at my home page ' + props.onMyTeamPage);
   if (props.loading) {
     return <Spinner />;
   } else {

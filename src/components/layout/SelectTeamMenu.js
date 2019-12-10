@@ -2,8 +2,9 @@ import React, {useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
+import {Link} from "react-router-dom";
 
-const SelectTeamMenu = ({my_teams,team_name,team_data,setAlert,getItemDynamoDB,team_id,scanDynamoDB,putItemDynamoDB, updateItemDynamoDB, tableName,sendEmailToDevelopers}) => {
+const SelectTeamMenu = ({my_teams,team_name,team_data,setAlert,getItemDynamoDB,team_id,scanDynamoDB,putItemDynamoDB, updateItemDynamoDB, tableName}) => {
     useEffect(() => {
         // in place of component did mount
         scanTeamsButtonPressed();
@@ -81,12 +82,6 @@ const SelectTeamMenu = ({my_teams,team_name,team_data,setAlert,getItemDynamoDB,t
         );
     };
 
-    const sendEmailButtonPressed = () => {
-        sendEmailToDevelopers(
-            parseInt(team_id)
-        );
-    };
-
     const clickedOffMenu = () => {
         setAnchorEl(null);
     };
@@ -108,9 +103,9 @@ const SelectTeamMenu = ({my_teams,team_name,team_data,setAlert,getItemDynamoDB,t
             <button className='btn btn-light' onClick={getUpdateButtonPressed}>
                 Get updates
             </button>
-            <button className='btn btn-light' onClick={sendEmailButtonPressed}>
-                Send Email
-            </button>
+            <Link to='/myEmail' className='btn btn-light'>
+                Send email
+            </Link>
             <Menu
                 id="simple-menu"
                 anchorEl={anchorEl}
@@ -134,7 +129,6 @@ SelectTeamMenu.propTypes = {
     putItemDynamoDB: PropTypes.func.isRequired,
     setAlert: PropTypes.func.isRequired,
     tableName: PropTypes.string.isRequired,
-    sendEmailToDevelopers: PropTypes.func.isRequired,
 };
 
 export default SelectTeamMenu;

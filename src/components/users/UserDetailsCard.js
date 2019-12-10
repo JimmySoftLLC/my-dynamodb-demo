@@ -2,8 +2,9 @@ import React, { Fragment, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import Repos from '../repos/Repos';
+import Spinner from '../layout/Spinner';
 
-const User = ({user, getUser, repos, match, getUserRepos }) => {
+const User = ({user, getUser, repos, match, getUserRepos,loading }) => {
   useEffect(() => {
     // in place of component did mount
     getUser(match.params.login);
@@ -28,7 +29,7 @@ const User = ({user, getUser, repos, match, getUserRepos }) => {
       email,
     } = user;
 
-    //if (loading) return <Spinner />;
+    if (loading) return <Spinner />;
 
     return (
       <Fragment>

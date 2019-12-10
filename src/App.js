@@ -1,9 +1,9 @@
 import React, { Fragment, useState } from 'react';
 import Navbar from './components/layout/Navbar';
 import Users from './components/users/Users';
-import FetchAWS from './components/users/FetchAWS';
+import FetchAWS from './components/pages/FetchAWS';
 import UserDetailsCard from './components/users/UserDetailsCard';
-import Search from './components/users/Search';
+import Search from './components/pages/Search';
 import Alert from './components/layout/Alert';
 import AlertDialog from './components/layout/AlertDialog';
 import About from './components/pages/About';
@@ -12,7 +12,7 @@ import MyDynamoTable from './components/pages/MyDynamoTable';
 import Footer from './components/layout/Footer';
 import axios from 'axios';
 import SelectTeamMenu from "./components/layout/SelectTeamMenu";
-
+import EmailTeam from "./components/pages/EmailTeam";
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import './App.css';
 
@@ -33,6 +33,11 @@ const App  = () => {
   const [team_data, setTeam_data] = useState(' ');
   const [search_text, setSearch_text] = useState('');
   const [tableName] = useState('my_open_source_team');
+  const [email_subject, setEmail_subject] = useState('');
+  const [email_bcc, setEmail_bcc] = useState('');
+  const [email_body, setEmail_body] = useState('');
+  const [email_to, setEmail_to] = useState('');
+  const [email_cc, setEmail_cc] = useState('');
 
   //search github users
   const searchUsers = async text => {
@@ -59,7 +64,7 @@ const App  = () => {
     setLoading(true );
     try {
       const res = await axios.get(
-        'https://api.github.com/users/' +
+          'https://api.github.com/users/' +
           userName +
           '?client_id=' +
           process.env.REACT_APP_GITHUB_CLIENT_ID +
@@ -72,6 +77,31 @@ const App  = () => {
       setUser({}) ;
       setLoading(false );
     }
+  };
+
+  const getUsersForEmail = async users => {
+    setLoading(true );
+    setEmail_to('');
+    let myToEmails = '';
+    for (let i = 0; i<users.length; i++){
+      try {
+        const res = await axios.get(
+            'https://api.github.com/users/' +
+            users[i].login +
+            '?client_id=' +
+            process.env.REACT_APP_GITHUB_CLIENT_ID +
+            '&client_secret=' +
+            process.env.REACT_APP_GITHUB_CLIENT_SECRET
+        );
+        if (res.data.email !== null) {
+          myToEmails +=res.data.email +',';
+        }
+      } catch (err) {
+
+      }
+    }
+    setEmail_to(myToEmails);
+    setLoading(false );
   };
 
   const scanDynamoDB = async TableName => {
@@ -258,7 +288,7 @@ const App  = () => {
 
   const addUserToTeam = async myUser => {
     let foundDuplicate = false;
-    for (var j = 0; j < my_users.length; j++) {
+    for (let j = 0; j < my_users.length; j++) {
       if (my_users[j].login === myUser.login) {
         foundDuplicate = true;
       }
@@ -316,12 +346,23 @@ const App  = () => {
       case 'search_text':
         setSearch_text(value);
         break;
+      case 'email_subject':
+        setEmail_subject(value);
+        break;
+      case 'email_bcc':
+        setEmail_bcc(value);
+        break;
+      case 'email_body':
+        setEmail_body(value);
+        break;
+      case 'email_cc':
+        setEmail_cc(value);
+        break;
+      case 'email_to':
+        setEmail_to(value);
+        break;
       default:
     }
-  };
-
-  const sendEmailToDevelopers = (team_id) => {
-    console.log ("team id: " + team_id);
   };
 
     return (
@@ -375,7 +416,6 @@ const App  = () => {
                       getItemDynamoDB={getItemDynamoDB}
                       putItemDynamoDB={putItemDynamoDB}
                       updateItemDynamoDB={updateItemDynamoDB}
-                      sendEmailToDevelopers={sendEmailToDevelopers}
                       team_id={team_id}
                       team_name={team_name}
                       team_data={team_data}
@@ -397,6 +437,25 @@ const App  = () => {
                     />
                   </Fragment>
                 )}
+              />
+              <Route
+                  exact
+                  path='/myEmail'
+                  render={() => (
+                      <Fragment>
+                        <EmailTeam
+                            loading={loading}
+                            email_to={email_to}
+                            email_cc={email_cc}
+                            email_subject={email_subject}
+                            email_bcc={email_bcc}
+                            email_body={email_body}
+                            getUsersForEmail={getUsersForEmail}
+                            my_users={my_users}
+                            setText={setText}
+                        />
+                      </Fragment>
+                  )}
               />
               <Route
                 exact
@@ -438,6 +497,35 @@ const App  = () => {
                     loading={loading}
                   />
                 )}
+              />
+              <Route
+                  render={() => (
+                      <Fragment>
+                        <Alert alert={alert} />
+                        <Search
+                            setAlert={showAlert}
+                            searchUsers={searchUsers}
+                            clearUsers={clearUsers}
+                            showClear={users.length > 0 ? true : false}
+                            search_text={search_text}
+                            setText={setText}
+                        />
+                        <Users
+                            loading={loading}
+                            users={users}
+                            my_users={my_users}
+                            removeUserFromTeam={removeUserFromTeam}
+                            addUserToTeam={addUserToTeam}
+                            onMyTeamPage={false}
+                        />
+                        <AlertDialog
+                            alertOpen={alertOpen}
+                            setAlertToClosed={setAlertToClosed}
+                            alertMessage={alertMessage}
+                            alertTitle={alertTitle}
+                        />
+                      </Fragment>
+                  )}
               />
             </Switch>
           </div>
