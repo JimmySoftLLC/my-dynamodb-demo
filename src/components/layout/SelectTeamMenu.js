@@ -4,10 +4,12 @@ import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import {Link} from "react-router-dom";
 
-const SelectTeamMenu = ({my_teams,team_name,team_data,setAlert,getItemDynamoDB,team_id,scanDynamoDB,putItemDynamoDB, updateItemDynamoDB, tableName}) => {
+const SelectTeamMenu = ({my_teams,team_name,team_data,setAlert,getItemDynamoDB,team_id,scanDynamoDB,putItemDynamoDB, updateItemDynamoDB, tableName,setOnMyTeamPage,setRedirectTo}) => {
     useEffect(() => {
         // in place of component did mount
         scanTeamsButtonPressed();
+        setOnMyTeamPage(true);
+        setRedirectTo('');
         // eslint-disable-next-line
     }, []);
 
@@ -38,6 +40,36 @@ const SelectTeamMenu = ({my_teams,team_name,team_data,setAlert,getItemDynamoDB,t
                 randomInt,
                 team_name + ' copy',
                 team_data
+            );
+            setTimeout(() => scanTeamsButtonPressed(),1000);
+            setTimeout(() => getUpdates(randomInt),2000);
+            setAlert('waiting for eventually consistent reads', 'light', 2000);
+        }
+    };
+
+    const newTeamButtonPressed = () => {
+        let foundUniqueId = false;
+        let spillOutIndex = 0;
+        let randomInt = 0;
+        while (foundUniqueId===false){
+            spillOutIndex ++;
+            if (spillOutIndex > 150) break;
+            randomInt = Math.floor(Math.random() * (100 - 11)) + 11;
+            for (let i = 0; i < my_teams.length; i++) {
+                if (randomInt === my_teams[i].team_id ) break;
+                if (i === my_teams.length-1) {
+                    foundUniqueId=true;
+                }
+            }
+        }
+        let newTeamName = 'new team ' + randomInt.toString();
+
+        if (foundUniqueId===true) {
+            putItemDynamoDB(
+                tableName,
+                randomInt,
+                newTeamName,
+                '[]'
             );
             setTimeout(() => scanTeamsButtonPressed(),1000);
             setTimeout(() => getUpdates(randomInt),2000);
@@ -94,6 +126,9 @@ const SelectTeamMenu = ({my_teams,team_name,team_data,setAlert,getItemDynamoDB,t
             <button className='btn btn-light' onClick={scanTeamsButtonPressed}>
                 Scan teams
             </button>
+            <button className='btn btn-light' onClick={newTeamButtonPressed}>
+                New team
+            </button>
             <button className='btn btn-light' onClick={copyTeamButtonPressed}>
                 Copy team
             </button>
@@ -104,7 +139,7 @@ const SelectTeamMenu = ({my_teams,team_name,team_data,setAlert,getItemDynamoDB,t
                 Get updates
             </button>
             <Link to='/myEmail' className='btn btn-light'>
-                Send email
+                Compose email
             </Link>
             <Menu
                 id="simple-menu"

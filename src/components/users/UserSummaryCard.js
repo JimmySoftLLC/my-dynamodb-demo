@@ -19,7 +19,6 @@ const UserSummaryCard = ({ user, onMyTeamPage, removeUserFromTeam, addUserToTeam
         login,
     } = user;
 
-
     return (
       <div className='card text-center'>
         <img
@@ -53,6 +52,7 @@ const UserSummaryCard = ({ user, onMyTeamPage, removeUserFromTeam, addUserToTeam
 
 UserSummaryCard.propTypes = {
     user: PropTypes.object.isRequired,
+    onMyTeamPage: PropTypes.bool.isRequired,
     removeUserFromTeam: PropTypes.func.isRequired,
     addUserToTeam: PropTypes.func.isRequired,
 };

@@ -1,7 +1,14 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import PropTypes from 'prop-types';
 
-const Search = ({ searchUsers, showClear, clearUsers, setAlert, setText, search_text }) => {
+const Search = ({ searchUsers, showClear, clearUsers, setAlert, setText, search_text, setOnMyTeamPage, setRedirectTo }) => {
+  useEffect(() => {
+    // in place of component did mount
+    setOnMyTeamPage(false);
+    setRedirectTo('');
+    // eslint-disable-next-line
+  }, []);
+
   const onChange = e => {
     setText(e.target.name, e.target.value);
   };

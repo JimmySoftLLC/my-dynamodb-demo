@@ -3,14 +3,31 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import Repos from '../repos/Repos';
 import Spinner from '../layout/Spinner';
+import { Redirect } from 'react-router-dom';
 
-const User = ({user, getUser, repos, match, getUserRepos,loading }) => {
+const User = ({user, getUser, repos, match, getUserRepos,loading,removeUserFromTeam, addUserToTeam, redirectTo, onMyTeamPage}) => {
   useEffect(() => {
     // in place of component did mount
     getUser(match.params.login);
     getUserRepos(match.params.login);
     // eslint-disable-next-line
   }, []);
+
+    const removeUser = () => {
+        if (onMyTeamPage) {
+            removeUserFromTeam(login,'/myTeam');
+        }else{
+            removeUserFromTeam(login,'/myTeam');
+        }
+    };
+
+    const addUser = () => {
+        if (onMyTeamPage) {
+            addUserToTeam(user,'/');
+        }else{
+            addUserToTeam(user,'/');
+        }
+    };
 
     const {
       name,
@@ -31,8 +48,21 @@ const User = ({user, getUser, repos, match, getUserRepos,loading }) => {
 
     if (loading) return <Spinner />;
 
+    let redirectToLocal;
+    switch (redirectTo) {
+        case "/":
+            redirectToLocal = <Redirect to='/' />;
+            break;
+        case "/myTeam":
+            redirectToLocal = <Redirect to='/myTeam' />;
+            break;
+        default:
+            redirectToLocal = null;
+    }
+
     return (
       <Fragment>
+          {redirectToLocal}
         <Link to='/myTeam' className='btn btn-light page-top-margin'>
           <i className="fas fa-arrow-left"></i> My Team
         </Link>
@@ -71,6 +101,18 @@ const User = ({user, getUser, repos, match, getUserRepos,loading }) => {
             >
               Visit Github Profile
             </a>
+              {onMyTeamPage ? (
+                  <button
+                      className='btn btn-dark my-1'
+                      onClick={removeUser}
+                  >
+                      Remove
+                  </button>
+              ) : (
+                  <button className='btn btn-dark my-1' onClick={addUser}>
+                      Add
+                  </button>
+              )}
             <ul>
               <li>
                 {login && (
@@ -119,15 +161,16 @@ const User = ({user, getUser, repos, match, getUserRepos,loading }) => {
     );
 };
 
-
-
-
 User.propTypes = {
     loading: PropTypes.bool.isRequired,
     user: PropTypes.object.isRequired,
     repos: PropTypes.array.isRequired,
     getUser: PropTypes.func.isRequired,
     getUserRepos: PropTypes.func.isRequired,
+    removeUserFromTeam: PropTypes.func.isRequired,
+    addUserToTeam: PropTypes.func.isRequired,
+    redirectTo: PropTypes.string.isRequired,
+    onMyTeamPage: PropTypes.bool.isRequired,
 };
 
 export default User;

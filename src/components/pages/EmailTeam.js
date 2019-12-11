@@ -20,8 +20,7 @@ const EmailTeam = ({setText,getUsersForEmail,my_users,email_subject,email_bcc,em
             myConvertedEmailBody += convertForEmailMailTo(email_body[i]);
         }
         var mailto_link = 'mailto:'+email_to+'?subject='+email_subject+'&cc='+email_cc+'&bcc='+email_bcc+'&body='+myConvertedEmailBody;
-        var win = window.open(mailto_link,'emailWindow');
-        setTimeout(function() { win.close() }, 500);
+        window.open(mailto_link,'emailWindow');
     };
 
     const convertForEmailMailTo = (input) => {
@@ -47,7 +46,7 @@ const EmailTeam = ({setText,getUsersForEmail,my_users,email_subject,email_bcc,em
                     <i className="fas fa-arrow-left"></i> My Team
                 </Link>
                 <button className='btn btn-light' onClick={scanButtonPressed}>
-                    Send email now
+                    Send email
                 </button>
                 <p className='input-aws-table-label'>To</p>
                 <input

@@ -38,6 +38,8 @@ const App  = () => {
   const [email_body, setEmail_body] = useState('');
   const [email_to, setEmail_to] = useState('');
   const [email_cc, setEmail_cc] = useState('');
+  const [redirectTo, setRedirectTo] = useState('');
+  const [onMyTeamPage, setOnMyTeamPage] = useState(false);
 
   //search github users
   const searchUsers = async text => {
@@ -219,6 +221,9 @@ const App  = () => {
         }
       );
       setAmazonResponse(JSON.stringify(res.data));
+      setTeam_id('');
+      setTeam_name('');
+      setTeam_data('');
     } catch (err) {
       setAlertDialog(err.message);
     }
@@ -261,7 +266,7 @@ const App  = () => {
       const res = await axios.get(
           'https://api.github.com/users/' +
           userName +
-          '/repos?per_page=20&sort=created:asc' +
+          '/repos?per_page=40&sort=created:asc' +
           '&client_id=' +
           process.env.REACT_APP_GITHUB_CLIENT_ID +
           '&client_secret=' +
@@ -275,7 +280,7 @@ const App  = () => {
     }
   };
 
-  const removeUserFromTeam = async login => {
+  const removeUserFromTeam = async (login,redirectPath) => {
     let tempUser = [];
     for (var i = 0; i < my_users.length; i++) {
       if (my_users[i].login !== login) {
@@ -284,9 +289,10 @@ const App  = () => {
     }
     setMy_users( tempUser );
     setTeam_data(JSON.stringify(tempUser));
+    setRedirectTo(redirectPath);
   };
 
-  const addUserToTeam = async myUser => {
+  const addUserToTeam = async (myUser,redirectPath) => {
     let foundDuplicate = false;
     for (let j = 0; j < my_users.length; j++) {
       if (my_users[j].login === myUser.login) {
@@ -310,6 +316,7 @@ const App  = () => {
       setMy_users(tempUser);
       setUsers(tempUser2);
     }
+    setRedirectTo(redirectPath);
   };
 
   const clearUsers = () => {
@@ -378,6 +385,8 @@ const App  = () => {
                   <Fragment>
                     <Alert alert={alert} />
                     <Search
+                        setRedirectTo={setRedirectTo}
+                        setOnMyTeamPage={setOnMyTeamPage}
                       setAlert={showAlert}
                       searchUsers={searchUsers}
                       clearUsers={clearUsers}
@@ -391,7 +400,8 @@ const App  = () => {
                       my_users={my_users}
                       removeUserFromTeam={removeUserFromTeam}
                       addUserToTeam={addUserToTeam}
-                      onMyTeamPage={false}
+                      onMyTeamPage={onMyTeamPage}
+                      setOnMyTeamPage={setOnMyTeamPage}
                     />
                     <AlertDialog
                       alertOpen={alertOpen}
@@ -410,6 +420,8 @@ const App  = () => {
                   <Fragment>
                     <Alert alert={alert} />
                     <SelectTeamMenu
+                        setRedirectTo={setRedirectTo}
+                        setOnMyTeamPage={setOnMyTeamPage}
                       setAlert={showAlert}
                       my_teams={my_teams}
                       scanDynamoDB={scanDynamoDB}
@@ -425,9 +437,10 @@ const App  = () => {
                       my_users={my_users}
                       removeUserFromTeam={removeUserFromTeam}
                       addUserToTeam={addUserToTeam}
-                      onMyTeamPage={true}
+                      onMyTeamPage={onMyTeamPage}
                       team_name={team_name}
                       setText={setText}
+                      setOnMyTeamPage={setOnMyTeamPage}
                     />
                     <AlertDialog
                         alertOpen={alertOpen}
@@ -495,37 +508,14 @@ const App  = () => {
                     user={user}
                     repos={repos}
                     loading={loading}
+                    removeUserFromTeam={removeUserFromTeam}
+                    addUserToTeam={addUserToTeam}
+                    onMyTeamPage={onMyTeamPage}
+                    redirectTo={redirectTo}
                   />
                 )}
               />
               <Route
-                  render={() => (
-                      <Fragment>
-                        <Alert alert={alert} />
-                        <Search
-                            setAlert={showAlert}
-                            searchUsers={searchUsers}
-                            clearUsers={clearUsers}
-                            showClear={users.length > 0 ? true : false}
-                            search_text={search_text}
-                            setText={setText}
-                        />
-                        <Users
-                            loading={loading}
-                            users={users}
-                            my_users={my_users}
-                            removeUserFromTeam={removeUserFromTeam}
-                            addUserToTeam={addUserToTeam}
-                            onMyTeamPage={false}
-                        />
-                        <AlertDialog
-                            alertOpen={alertOpen}
-                            setAlertToClosed={setAlertToClosed}
-                            alertMessage={alertMessage}
-                            alertTitle={alertTitle}
-                        />
-                      </Fragment>
-                  )}
               />
             </Switch>
           </div>
