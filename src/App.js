@@ -223,7 +223,9 @@ const App  = () => {
       setAmazonResponse(JSON.stringify(res.data));
       setTeam_id('');
       setTeam_name('');
-      setTeam_data('');
+      setTeam_data('[]');
+      setMy_users([]);
+      setLoading (false);
     } catch (err) {
       setAlertDialog(err.message);
     }

@@ -3,19 +3,37 @@ import React, { Fragment } from 'react';
 const About = () => {
   return (
     <Fragment>
-      <h2 className='page-top-margin'>About myDynamoDB</h2>
+      <h2 className='page-top-margin'>Instructional video</h2>
+      <div className="video-responsive">
+        <iframe width="560" height="315" title="myFrame" src="https://www.youtube.com/embed/6VQAzkumQfA" frameBorder="0"
+                allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
+      </div>
+      <h2 >About myDynamoDB</h2>
       <p className='p'>
-        MyDynamoDB is a react app that saves github user data to a database using API gateway,
-        lambda functions, and a dynamoDB database. The user data comes from github using the github API.
+        MyDynamoDB is a react app that saves github user data to a database
+        using API gateway, lambda functions, and a dynamoDB database. The user
+        data comes from github using the github API.
       </p>
       <p className='p'>
-        The front end is roughly based on a react project from Brad
-        Traversy's tutorial which you can find at{' '}
-        <a href='https://www.udemy.com/share/101Xdq/'>udemy</a>. Then I changed it to fit my needs.
+        The front end is roughly based on a react project from Brad Traversy's
+        tutorial which you can find at{' '}
+        <a
+          href='https://www.udemy.com/share/101Xdq/'
+          target='_blank'
+          rel='noopener noreferrer'
+        >
+          udemy
+        </a>
+        . Then I changed it to fit my needs.
       </p>
       <p className='p'>
-        I also have a blog post that goes into detail on setting up a dynamoDB database, API gateway and lambda functions. You can find it at {'  '}
-        <a href='https://www.mysoftwarejourney.com/2019/11/19/serverless-is-awesome/'>
+        I also have a blog post that goes into detail on setting up a dynamoDB
+        database, API gateway and lambda functions. You can find it at {'  '}
+        <a
+          href='https://www.mysoftwarejourney.com/2019/11/19/serverless-is-awesome/'
+          target='_blank'
+          rel='noopener noreferrer'
+        >
           mysoftwarejourney.com
         </a>
       </p>
@@ -70,7 +88,11 @@ const About = () => {
       </p>
       <p className='p'>
         All this code is available on my git hub account which you can find here{' '}
-        <a href='https://github.com/JimmySoftLLC/my-dynamodb-demo'>
+        <a
+          href='https://github.com/JimmySoftLLC/my-dynamodb-demo'
+          target='_blank'
+          rel='noopener noreferrer'
+        >
           my-dynamodb-demo .
         </a>
       </p>
@@ -78,7 +100,11 @@ const About = () => {
       <p className='p'>
         Before provisioning at AWS you might want to run a development version
         of dynamoDB. This way you can debug all your code locally for free.
-        <a href='https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/DynamoDBLocal.DownloadingAndRunning.html'>
+        <a
+          href='https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/DynamoDBLocal.DownloadingAndRunning.html'
+          target='_blank'
+          rel='noopener noreferrer'
+        >
           {' '}
           Downloading And Running Instructions at AWS
         </a>
@@ -154,7 +180,11 @@ const About = () => {
           <br />
         </code>
         9. Use the following reference for all the command available{' '}
-        <a href='https://docs.aws.amazon.com/cli/latest/reference/dynamodb/index.html'>
+        <a
+          href='https://docs.aws.amazon.com/cli/latest/reference/dynamodb/index.html'
+          target='_blank'
+          rel='noopener noreferrer'
+        >
           dynamoDB CLI reference
         </a>
       </p>

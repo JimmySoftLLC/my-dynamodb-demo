@@ -63,7 +63,6 @@ const SelectTeamMenu = ({my_teams,team_name,team_data,setAlert,getItemDynamoDB,t
             }
         }
         let newTeamName = 'new team ' + randomInt.toString();
-
         if (foundUniqueId===true) {
             putItemDynamoDB(
                 tableName,
