@@ -1,7 +1,19 @@
-import React, {useEffect} from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import PropTypes from 'prop-types';
+import AlertContext from '../../context/alert/alertContext';
 
-const Search = ({ searchUsers, showClear, clearUsers, setAlert, setText, search_text, setOnMyTeamPage, setRedirectTo }) => {
+const Search = ({
+  searchUsers,
+  showClear,
+  clearUsers,
+  setAlert,
+  setText,
+  search_text,
+  setOnMyTeamPage,
+  setRedirectTo,
+}) => {
+  const alertContext = useContext(AlertContext);
+
   useEffect(() => {
     // in place of component did mount
     setOnMyTeamPage(false);
@@ -16,10 +28,10 @@ const Search = ({ searchUsers, showClear, clearUsers, setAlert, setText, search_
   const onSubmit = e => {
     e.preventDefault();
     if (search_text === '') {
-      setAlert('Please enter something', 'light', 5000);
+      alertContext.setAlert('Please enter something', 'light', 5000);
     } else {
       searchUsers(search_text);
-      setText('search_text','');
+      setText('search_text', '');
     }
   };
 
@@ -40,10 +52,7 @@ const Search = ({ searchUsers, showClear, clearUsers, setAlert, setText, search_
         />
       </form>
       {showClear && (
-        <button
-          className='btn btn-light btn-block'
-          onClick={clearUsers}
-        >
+        <button className='btn btn-light btn-block' onClick={clearUsers}>
           Clear
         </button>
       )}

@@ -11,12 +11,13 @@ import MyTeam from './components/pages/MyTeam';
 import MyDynamoTable from './components/pages/MyDynamoTable';
 import Footer from './components/layout/Footer';
 import axios from 'axios';
-import SelectTeamMenu from "./components/layout/SelectTeamMenu";
-import EmailTeam from "./components/pages/EmailTeam";
+import SelectTeamMenu from './components/layout/SelectTeamMenu';
+import EmailTeam from './components/pages/EmailTeam';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import AlertState from './context/alert/AlertState';
 import './App.css';
 
-const App  = () => {
+const App = () => {
   const [users, setUsers] = useState([]);
   const [user, setUser] = useState({});
   const [repos, setRepos] = useState([]);
@@ -41,9 +42,12 @@ const App  = () => {
   const [redirectTo, setRedirectTo] = useState('');
   const [onMyTeamPage, setOnMyTeamPage] = useState(false);
 
+  const lambdaFunctionURL =
+    'https://yfyft0meu9.execute-api.us-east-1.amazonaws.com/default/restapi';
+
   //search github users
   const searchUsers = async text => {
-    setLoading(true );
+    setLoading(true);
     try {
       const res = await axios.get(
         'https://api.github.com/search/users' +
@@ -57,16 +61,16 @@ const App  = () => {
       setUsers(res.data.items);
       setLoading(false);
     } catch (err) {
-      setUsers([]) ;
-      setLoading(false );
+      setUsers([]);
+      setLoading(false);
     }
   };
 
   const getUser = async userName => {
-    setLoading(true );
+    setLoading(true);
     try {
       const res = await axios.get(
-          'https://api.github.com/users/' +
+        'https://api.github.com/users/' +
           userName +
           '?client_id=' +
           process.env.REACT_APP_GITHUB_CLIENT_ID +
@@ -76,19 +80,19 @@ const App  = () => {
       setUser(res.data);
       setLoading(false);
     } catch (err) {
-      setUser({}) ;
-      setLoading(false );
+      setUser({});
+      setLoading(false);
     }
   };
 
   const getUsersForEmail = async users => {
-    setLoading(true );
+    setLoading(true);
     setEmail_to('');
     let myToEmails = '';
-    for (let i = 0; i<users.length; i++){
+    for (let i = 0; i < users.length; i++) {
       try {
         const res = await axios.get(
-            'https://api.github.com/users/' +
+          'https://api.github.com/users/' +
             users[i].login +
             '?client_id=' +
             process.env.REACT_APP_GITHUB_CLIENT_ID +
@@ -96,20 +100,18 @@ const App  = () => {
             process.env.REACT_APP_GITHUB_CLIENT_SECRET
         );
         if (res.data.email !== null) {
-          myToEmails +=res.data.email +',';
+          myToEmails += res.data.email + ',';
         }
-      } catch (err) {
-
-      }
+      } catch (err) {}
     }
     setEmail_to(myToEmails);
-    setLoading(false );
+    setLoading(false);
   };
 
   const scanDynamoDB = async TableName => {
     try {
       const res = await axios.post(
-        'https://yfyft0meu9.execute-api.us-east-1.amazonaws.com/default/restapi',
+        lambdaFunctionURL,
         {
           myBody: {
             TableName: TableName,
@@ -144,7 +146,7 @@ const App  = () => {
   const putItemDynamoDB = async (TableName, team_id, team_name, team_data) => {
     try {
       const res = await axios.post(
-        'https://yfyft0meu9.execute-api.us-east-1.amazonaws.com/default/restapi',
+        lambdaFunctionURL,
         {
           myBody: {
             TableName: TableName,
@@ -171,10 +173,15 @@ const App  = () => {
     }
   };
 
-  const updateItemDynamoDB = async (TableName, team_id, team_name, team_data) => {
+  const updateItemDynamoDB = async (
+    TableName,
+    team_id,
+    team_name,
+    team_data
+  ) => {
     try {
       const res = await axios.post(
-        'https://yfyft0meu9.execute-api.us-east-1.amazonaws.com/default/restapi',
+        lambdaFunctionURL,
         {
           myBody: {
             TableName: TableName,
@@ -196,7 +203,8 @@ const App  = () => {
       setAmazonResponse(JSON.stringify(res.data));
     } catch (err) {
       setAlertDialog(
-        err.message + ' Update not completed because this team is write protected.'
+        err.message +
+          ' Update not completed because this team is write protected.'
       );
     }
   };
@@ -225,7 +233,7 @@ const App  = () => {
       setTeam_name('');
       setTeam_data('[]');
       setMy_users([]);
-      setLoading (false);
+      setLoading(false);
     } catch (err) {
       setAlertDialog(err.message);
     }
@@ -234,39 +242,39 @@ const App  = () => {
   const getItemDynamoDB = async (TableName, team_id) => {
     try {
       const res = await axios.post(
-          'https://yfyft0meu9.execute-api.us-east-1.amazonaws.com/default/restapi',
-          {
-            myBody: {
-              TableName: TableName,
-              Key: {
-                team_id: team_id,
-              },
-              ReturnConsumedCapacity: 'TOTAL',
+        lambdaFunctionURL,
+        {
+          myBody: {
+            TableName: TableName,
+            Key: {
+              team_id: team_id,
             },
-            myMethod: 'getItem',
+            ReturnConsumedCapacity: 'TOTAL',
           },
-          {
-            headers: {
-              Accept: '*/*',
-            },
-          }
+          myMethod: 'getItem',
+        },
+        {
+          headers: {
+            Accept: '*/*',
+          },
+        }
       );
       setAmazonResponse(JSON.stringify(res.data));
       setTeam_id(res.data.Item.team_id);
       setTeam_name(res.data.Item.team_name);
       setTeam_data(res.data.Item.team_data);
-      setMy_users(JSON.parse(res.data.Item.team_data))
+      setMy_users(JSON.parse(res.data.Item.team_data));
     } catch (err) {
       setAlertDialog(err.message);
     }
   };
 
   const getUserRepos = async userName => {
-    setLoading(true );
+    setLoading(true);
     setRepos([]);
     try {
       const res = await axios.get(
-          'https://api.github.com/users/' +
+        'https://api.github.com/users/' +
           userName +
           '/repos?per_page=40&sort=created:asc' +
           '&client_id=' +
@@ -282,19 +290,19 @@ const App  = () => {
     }
   };
 
-  const removeUserFromTeam = async (login,redirectPath) => {
+  const removeUserFromTeam = async (login, redirectPath) => {
     let tempUser = [];
     for (var i = 0; i < my_users.length; i++) {
       if (my_users[i].login !== login) {
         tempUser.push(my_users[i]);
       }
     }
-    setMy_users( tempUser );
+    setMy_users(tempUser);
     setTeam_data(JSON.stringify(tempUser));
     setRedirectTo(redirectPath);
   };
 
-  const addUserToTeam = async (myUser,redirectPath) => {
+  const addUserToTeam = async (myUser, redirectPath) => {
     let foundDuplicate = false;
     for (let j = 0; j < my_users.length; j++) {
       if (my_users[j].login === myUser.login) {
@@ -323,12 +331,15 @@ const App  = () => {
 
   const clearUsers = () => {
     setUsers([]);
-    setLoading (false);
+    setLoading(false);
   };
 
   const showAlert = (msg, type, timeout) => {
-    setAlert( { msg: msg, type: type } );
-    setTimeout(() => setAlert(null ), timeout);
+    setAlert({
+      msg: msg,
+      type: type,
+    });
+    setTimeout(() => setAlert(null), timeout);
   };
 
   const setAlertDialog = msg => {
@@ -341,7 +352,7 @@ const App  = () => {
     setAlertOpen(false);
   };
 
-  const setText = (name,value) => {
+  const setText = (name, value) => {
     switch (name) {
       case 'team_name':
         setTeam_name(value);
@@ -374,7 +385,8 @@ const App  = () => {
     }
   };
 
-    return (
+  return (
+    <AlertState>
       <Router>
         <div className='App'>
           <Navbar />
@@ -385,17 +397,17 @@ const App  = () => {
                 path='/'
                 render={() => (
                   <Fragment>
-                    <Alert alert={alert} />
+                    <Alert />
                     <Search
-                        setRedirectTo={setRedirectTo}
-                        setOnMyTeamPage={setOnMyTeamPage}
+                      setRedirectTo={setRedirectTo}
+                      setOnMyTeamPage={setOnMyTeamPage}
                       setAlert={showAlert}
                       searchUsers={searchUsers}
                       clearUsers={clearUsers}
                       showClear={users.length > 0 ? true : false}
                       search_text={search_text}
                       setText={setText}
-                    />
+                    />{' '}
                     <Users
                       loading={loading}
                       users={users}
@@ -404,26 +416,26 @@ const App  = () => {
                       addUserToTeam={addUserToTeam}
                       onMyTeamPage={onMyTeamPage}
                       setOnMyTeamPage={setOnMyTeamPage}
-                    />
+                    />{' '}
                     <AlertDialog
                       alertOpen={alertOpen}
                       setAlertToClosed={setAlertToClosed}
                       alertMessage={alertMessage}
                       alertTitle={alertTitle}
-                    />
+                    />{' '}
                   </Fragment>
                 )}
-              />
-              <Route exact path='/about' component={About} />
+              />{' '}
+              <Route exact path='/about' component={About} />{' '}
               <Route
                 exact
                 path='/myTeam'
                 render={() => (
                   <Fragment>
-                    <Alert alert={alert} />
+                    <Alert />
                     <SelectTeamMenu
-                        setRedirectTo={setRedirectTo}
-                        setOnMyTeamPage={setOnMyTeamPage}
+                      setRedirectTo={setRedirectTo}
+                      setOnMyTeamPage={setOnMyTeamPage}
                       setAlert={showAlert}
                       my_teams={my_teams}
                       scanDynamoDB={scanDynamoDB}
@@ -434,7 +446,7 @@ const App  = () => {
                       team_name={team_name}
                       team_data={team_data}
                       tableName={tableName}
-                    />
+                    />{' '}
                     <MyTeam
                       my_users={my_users}
                       removeUserFromTeam={removeUserFromTeam}
@@ -443,42 +455,42 @@ const App  = () => {
                       team_name={team_name}
                       setText={setText}
                       setOnMyTeamPage={setOnMyTeamPage}
-                    />
+                    />{' '}
                     <AlertDialog
-                        alertOpen={alertOpen}
-                        setAlertToClosed={setAlertToClosed}
-                        alertMessage={alertMessage}
-                        alertTitle={alertTitle}
-                    />
+                      alertOpen={alertOpen}
+                      setAlertToClosed={setAlertToClosed}
+                      alertMessage={alertMessage}
+                      alertTitle={alertTitle}
+                    />{' '}
                   </Fragment>
                 )}
-              />
+              />{' '}
               <Route
-                  exact
-                  path='/myEmail'
-                  render={() => (
-                      <Fragment>
-                        <EmailTeam
-                            loading={loading}
-                            email_to={email_to}
-                            email_cc={email_cc}
-                            email_subject={email_subject}
-                            email_bcc={email_bcc}
-                            email_body={email_body}
-                            getUsersForEmail={getUsersForEmail}
-                            my_users={my_users}
-                            setText={setText}
-                        />
-                      </Fragment>
-                  )}
-              />
+                exact
+                path='/myEmail'
+                render={() => (
+                  <Fragment>
+                    <EmailTeam
+                      loading={loading}
+                      email_to={email_to}
+                      email_cc={email_cc}
+                      email_subject={email_subject}
+                      email_bcc={email_bcc}
+                      email_body={email_body}
+                      getUsersForEmail={getUsersForEmail}
+                      my_users={my_users}
+                      setText={setText}
+                    />{' '}
+                  </Fragment>
+                )}
+              />{' '}
               <Route
                 exact
                 path='/myDynamoTable'
                 render={() => (
                   <Fragment>
                     <FetchAWS
-                        tableName={tableName}
+                      tableName={tableName}
                       scanDynamoDB={scanDynamoDB}
                       putItemDynamoDB={putItemDynamoDB}
                       updateItemDynamoDB={updateItemDynamoDB}
@@ -488,17 +500,17 @@ const App  = () => {
                       team_name={team_name}
                       team_data={team_data}
                       setText={setText}
-                    />
-                    <MyDynamoTable amazonResponse={amazonResponse} />
+                    />{' '}
+                    <MyDynamoTable amazonResponse={amazonResponse} />{' '}
                     <AlertDialog
                       alertOpen={alertOpen}
                       setAlertToClosed={setAlertToClosed}
                       alertMessage={alertMessage}
                       alertTitle={alertTitle}
-                    />
+                    />{' '}
                   </Fragment>
                 )}
-              />
+              />{' '}
               <Route
                 exact
                 path='/user/:login'
@@ -516,15 +528,15 @@ const App  = () => {
                     redirectTo={redirectTo}
                   />
                 )}
-              />
-              <Route
-              />
-            </Switch>
-          </div>
+              />{' '}
+              <Route />
+            </Switch>{' '}
+          </div>{' '}
           <Footer />
-        </div>
-      </Router>
-    );
+        </div>{' '}
+      </Router>{' '}
+    </AlertState>
+  );
 };
 
 export default App;
