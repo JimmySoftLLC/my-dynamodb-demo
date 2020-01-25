@@ -22,7 +22,6 @@ const App = () => {
   const [user, setUser] = useState({});
   const [repos, setRepos] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [alert, setAlert] = useState(null);
   const [amazonResponse, setAmazonResponse] = useState(' ');
   const [my_users, setMy_users] = useState([]);
   const [my_teams, setMy_teams] = useState([]);
@@ -51,12 +50,12 @@ const App = () => {
     try {
       const res = await axios.get(
         'https://api.github.com/search/users' +
-          '?q=' +
-          text +
-          '&client_id=' +
-          process.env.REACT_APP_GITHUB_CLIENT_ID +
-          '&client_secret=' +
-          process.env.REACT_APP_GITHUB_CLIENT_SECRET
+        '?q=' +
+        text +
+        '&client_id=' +
+        process.env.REACT_APP_GITHUB_CLIENT_ID +
+        '&client_secret=' +
+        process.env.REACT_APP_GITHUB_CLIENT_SECRET
       );
       setUsers(res.data.items);
       setLoading(false);
@@ -71,11 +70,11 @@ const App = () => {
     try {
       const res = await axios.get(
         'https://api.github.com/users/' +
-          userName +
-          '?client_id=' +
-          process.env.REACT_APP_GITHUB_CLIENT_ID +
-          '&client_secret=' +
-          process.env.REACT_APP_GITHUB_CLIENT_SECRET
+        userName +
+        '?client_id=' +
+        process.env.REACT_APP_GITHUB_CLIENT_ID +
+        '&client_secret=' +
+        process.env.REACT_APP_GITHUB_CLIENT_SECRET
       );
       setUser(res.data);
       setLoading(false);
@@ -93,16 +92,16 @@ const App = () => {
       try {
         const res = await axios.get(
           'https://api.github.com/users/' +
-            users[i].login +
-            '?client_id=' +
-            process.env.REACT_APP_GITHUB_CLIENT_ID +
-            '&client_secret=' +
-            process.env.REACT_APP_GITHUB_CLIENT_SECRET
+          users[i].login +
+          '?client_id=' +
+          process.env.REACT_APP_GITHUB_CLIENT_ID +
+          '&client_secret=' +
+          process.env.REACT_APP_GITHUB_CLIENT_SECRET
         );
         if (res.data.email !== null) {
           myToEmails += res.data.email + ',';
         }
-      } catch (err) {}
+      } catch (err) { }
     }
     setEmail_to(myToEmails);
     setLoading(false);
@@ -204,7 +203,7 @@ const App = () => {
     } catch (err) {
       setAlertDialog(
         err.message +
-          ' Update not completed because this team is write protected.'
+        ' Update not completed because this team is write protected.'
       );
     }
   };
@@ -275,12 +274,12 @@ const App = () => {
     try {
       const res = await axios.get(
         'https://api.github.com/users/' +
-          userName +
-          '/repos?per_page=40&sort=created:asc' +
-          '&client_id=' +
-          process.env.REACT_APP_GITHUB_CLIENT_ID +
-          '&client_secret=' +
-          process.env.REACT_APP_GITHUB_CLIENT_SECRET
+        userName +
+        '/repos?per_page=40&sort=created:asc' +
+        '&client_id=' +
+        process.env.REACT_APP_GITHUB_CLIENT_ID +
+        '&client_secret=' +
+        process.env.REACT_APP_GITHUB_CLIENT_SECRET
       );
       setRepos(res.data);
       setLoading(false);
@@ -332,14 +331,6 @@ const App = () => {
   const clearUsers = () => {
     setUsers([]);
     setLoading(false);
-  };
-
-  const showAlert = (msg, type, timeout) => {
-    setAlert({
-      msg: msg,
-      type: type,
-    });
-    setTimeout(() => setAlert(null), timeout);
   };
 
   const setAlertDialog = msg => {
@@ -401,7 +392,6 @@ const App = () => {
                     <Search
                       setRedirectTo={setRedirectTo}
                       setOnMyTeamPage={setOnMyTeamPage}
-                      setAlert={showAlert}
                       searchUsers={searchUsers}
                       clearUsers={clearUsers}
                       showClear={users.length > 0 ? true : false}
@@ -436,7 +426,6 @@ const App = () => {
                     <SelectTeamMenu
                       setRedirectTo={setRedirectTo}
                       setOnMyTeamPage={setOnMyTeamPage}
-                      setAlert={showAlert}
                       my_teams={my_teams}
                       scanDynamoDB={scanDynamoDB}
                       getItemDynamoDB={getItemDynamoDB}

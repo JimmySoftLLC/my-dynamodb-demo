@@ -9,7 +9,6 @@ const SelectTeamMenu = ({
   my_teams,
   team_name,
   team_data,
-  setAlert,
   getItemDynamoDB,
   team_id,
   scanDynamoDB,
@@ -57,7 +56,7 @@ const SelectTeamMenu = ({
       alertContext.setAlert(
         'waiting for eventually consistent reads',
         'light',
-        2000
+        3000
       );
     }
   };
@@ -171,7 +170,6 @@ SelectTeamMenu.propTypes = {
   scanDynamoDB: PropTypes.func.isRequired,
   updateItemDynamoDB: PropTypes.func.isRequired,
   putItemDynamoDB: PropTypes.func.isRequired,
-  setAlert: PropTypes.func.isRequired,
   tableName: PropTypes.string.isRequired,
 };
 

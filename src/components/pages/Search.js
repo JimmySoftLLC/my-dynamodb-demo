@@ -1,18 +1,19 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
 import AlertContext from '../../context/alert/alertContext';
+import AlertDialogContext from '../../context/alertDialog/alertDialogContext';
 
 const Search = ({
   searchUsers,
   showClear,
   clearUsers,
-  setAlert,
   setText,
   search_text,
   setOnMyTeamPage,
   setRedirectTo,
 }) => {
   const alertContext = useContext(AlertContext);
+  const alertDialogContext = useContext(AlertDialogContext);
 
   useEffect(() => {
     // in place of component did mount
@@ -23,6 +24,7 @@ const Search = ({
 
   const onChange = e => {
     setText(e.target.name, e.target.value);
+    alertDialogContext.setAlertDialog(true, 'Please enter something', 'erorr');
   };
 
   const onSubmit = e => {
@@ -64,7 +66,6 @@ Search.propTypes = {
   searchUsers: PropTypes.func.isRequired,
   clearUsers: PropTypes.func.isRequired,
   showClear: PropTypes.bool.isRequired,
-  setAlert: PropTypes.func.isRequired,
   search_text: PropTypes.string.isRequired,
   setText: PropTypes.func.isRequired,
 };
