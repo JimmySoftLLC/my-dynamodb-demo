@@ -1,52 +1,46 @@
-import React, { Component } from 'react';
+import React, { Component, useContext } from 'react';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import PropTypes from 'prop-types';
+import AlertDialogContext from '../../context/alertDialog/alertDialogContext';
 
-class AlertDialog extends Component {
-  static propTypes = {
-    alertOpen: PropTypes.bool.isRequired,
-    setAlertToClosed: PropTypes.func.isRequired,
-    alertMessage: PropTypes.string.isRequired,
-    alertTitle: PropTypes.string.isRequired,
-  };
+const AlertDialog = () => {
 
-  handleClose = () => {
-    this.props.setAlertToClosed();
-  };
+  const alertDialogContext = useContext(AlertDialogContext);
 
-  render() {
-    return (
+  const { alertDialog, closeAlertDialog } = alertDialogContext;
+
+  console.log(alertDialogContext);
+
+  return (
+    alertDialog != null && (
       <div>
         <Dialog
-          open={this.props.alertOpen}
-          onClose={this.handleClose}
+          open={alertDialog.alertOpen}
           aria-labelledby='alert-dialog-title'
           aria-describedby='alert-dialog-description'
         >
           <DialogTitle id='alert-dialog-title'>
             <i className='fas fa-exclamation-triangle'></i>
             {'  '}
-            {this.props.alertTitle}
+            {alertDialog.alertTitle}
           </DialogTitle>
           <DialogContent>
             <DialogContentText id='alert-dialog-description'>
-              {this.props.alertMessage}
+              {alertDialog.alertMessage}
             </DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Button onClick={this.handleClose} className='btn btn-light'>
+            <Button onClick={() => closeAlertDialog()} className='btn btn-light'>
               OK
             </Button>
           </DialogActions>
         </Dialog>
-      </div>
-    );
-  }
+      </div>)
+  );
 }
 
 export default AlertDialog;

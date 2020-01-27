@@ -1,19 +1,15 @@
-import React, { useEffect, useContext } from 'react';
-import PropTypes from 'prop-types';
+import React, { useEffect, useContext, useState } from 'react';
 import AlertContext from '../../context/alert/alertContext';
-import AlertDialogContext from '../../context/alertDialog/alertDialogContext';
+import GithubContext from '../../context/gitHub/gitHubContext';
 
 const Search = ({
-  searchUsers,
   showClear,
-  clearUsers,
-  setText,
-  search_text,
   setOnMyTeamPage,
   setRedirectTo,
 }) => {
+  const gitHubContext = useContext(GithubContext);
   const alertContext = useContext(AlertContext);
-  const alertDialogContext = useContext(AlertDialogContext);
+  const [text, setText] = useState('');
 
   useEffect(() => {
     // in place of component did mount
@@ -23,17 +19,16 @@ const Search = ({
   }, []);
 
   const onChange = e => {
-    setText(e.target.name, e.target.value);
-    alertDialogContext.setAlertDialog(true, 'Please enter something', 'erorr');
+    setText(e.target.value);
   };
 
   const onSubmit = e => {
     e.preventDefault();
-    if (search_text === '') {
+    if (text === '') {
       alertContext.setAlert('Please enter something', 'light', 5000);
     } else {
-      searchUsers(search_text);
-      setText('search_text', '');
+      gitHubContext.searchUsers(text);
+      setText('');
     }
   };
 
@@ -42,9 +37,9 @@ const Search = ({
       <form onSubmit={onSubmit} className='form page-top-margin'>
         <input
           type='text'
-          name='search_text'
+          name='text'
           placeholder='find developers...'
-          value={search_text}
+          value={text}
           onChange={onChange}
         />
         <input
@@ -54,20 +49,12 @@ const Search = ({
         />
       </form>
       {showClear && (
-        <button className='btn btn-light btn-block' onClick={clearUsers}>
+        <button className='btn btn-light btn-block' onClick={gitHubContext.clearUsers}>
           Clear
         </button>
       )}
     </div>
   );
-};
-
-Search.propTypes = {
-  searchUsers: PropTypes.func.isRequired,
-  clearUsers: PropTypes.func.isRequired,
-  showClear: PropTypes.bool.isRequired,
-  search_text: PropTypes.string.isRequired,
-  setText: PropTypes.func.isRequired,
 };
 
 export default Search;

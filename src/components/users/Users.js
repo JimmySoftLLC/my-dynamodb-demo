@@ -1,15 +1,18 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import UserSummaryCard from './UserSummaryCard';
 import Spinner from '../layout/Spinner';
-import PropTypes from 'prop-types';
+import GitHubContext from '../../context/gitHub/gitHubContext';
 
 const Users = props => {
-  if (props.loading) {
+  const gitHubContext = useContext(GitHubContext);
+  const { loading, users } = gitHubContext;
+
+  if (loading) {
     return <Spinner />;
   } else {
     return (
       <div className='grid-4 page-bottom-margin'>
-        {props.users.map(user => (
+        {users.map(user => (
           <UserSummaryCard
             key={user.id}
             user={user}
@@ -21,12 +24,6 @@ const Users = props => {
       </div>
     );
   }
-};
-
-Users.propTypes = {
-  users: PropTypes.array.isRequired,
-  loading: PropTypes.bool.isRequired,
-  onMyTeamPage: PropTypes.bool.isRequired,
 };
 
 export default Users;

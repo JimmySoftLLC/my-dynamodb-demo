@@ -6,8 +6,8 @@ import { SET_ALERT_DIALOG, CLOSE_ALERT_DIALOG } from '../types';
 const AlertDialogState = props => {
   const initialState = {
     alertOpen: false,
-    alertMessage: '',
-    alertTitle: '',
+    alertMessage: 'dude',
+    alertTitle: 'error',
   };
 
   const [state, dispatch] = useReducer(AlertDialogReducer, initialState);
@@ -23,22 +23,19 @@ const AlertDialogState = props => {
     });
   };
 
-  const setAlertToClosed = () => {
+  const closeAlertDialog = () => {
     dispatch({ type: CLOSE_ALERT_DIALOG });
   };
 
   return (
     <AlertDialogContext.Provider
       value={{
-        alertOpen: state.alertOpen,
-        alertMessage: state.alertMessage,
-        alertTitle: state.alertTitle,
+        alertDialog: state,
         setAlertDialog,
-        setAlertToClosed,
+        closeAlertDialog,
       }}
     >
-      {' '}
-      {props.children}{' '}
+      {props.children}
     </AlertDialogContext.Provider>
   );
 };

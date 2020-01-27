@@ -17,6 +17,7 @@ const AlertState = props => {
         timeout,
       },
     });
+
     setTimeout(
       () =>
         dispatch({

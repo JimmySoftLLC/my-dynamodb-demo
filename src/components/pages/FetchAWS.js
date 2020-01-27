@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const FetchAWS = ({ team_id, team_name, team_data, setText,scanDynamoDB,putItemDynamoDB,updateItemDynamoDB,deleteItemDynamoDB,getItemDynamoDB,tableName }) => {
+const FetchAWS = ({ team_id, team_name, team_data, setText, scanDynamoDB, putItemDynamoDB, updateItemDynamoDB, deleteItemDynamoDB, getItemDynamoDB, tableName }) => {
 
-const onChange = e => {
+  const onChange = e => {
     setText(e.target.name, e.target.value);
-};
+  };
 
   const scanButtonPressed = () => {
     scanDynamoDB(tableName);
@@ -13,7 +13,7 @@ const onChange = e => {
 
   const putButtonPressed = () => {
     putItemDynamoDB(
-        tableName,
+      tableName,
       parseInt(team_id),
       team_name,
       team_data
@@ -22,7 +22,7 @@ const onChange = e => {
 
   const updateButtonPressed = () => {
     updateItemDynamoDB(
-        tableName,
+      tableName,
       parseInt(team_id),
       team_name,
       team_data
@@ -31,89 +31,89 @@ const onChange = e => {
 
   const deleteButtonPressed = () => {
     deleteItemDynamoDB(
-        tableName,
+      tableName,
       parseInt(team_id)
     );
   };
 
   const getButtonPressed = () => {
     getItemDynamoDB(
-        tableName,
+      tableName,
       parseInt(team_id)
     );
   };
 
-    return (
-      <div>
-        <h3 className='page-top-margin'>Dynamo Table Items</h3>
+  return (
+    <div>
+      <h3 className='page-top-margin'>Dynamo Table Items</h3>
       <p className='p'>
-          This page shows you the raw data from dynamodDB on AWS.
-          One interesting thing you will notice is that the capacity units are much larger to write
-          vs. read.  This is something you should be aware of when considering dynamoDB for
-          your project.  Writes are costly.  Reads are fast.
+        This page shows you the raw data from dynamodDB on AWS.
+        One interesting thing you will notice is that the capacity units are much larger to write
+        vs. read.  This is something you should be aware of when considering dynamoDB for
+        your project.  Writes are costly.  Reads are fast.
       </p>
-        <p className='p'>
-          Scan lists the items.  Put, Update, Delete and Get acts on the Team Id.
+      <p className='p'>
+        Scan lists the items.  Put, Update, Delete and Get acts on the Team Id.
         </p>
       <p className='p'>
-           Note: New entries shall follow the following: id > 10, team name = some text, and team data = an empty array [ ].
+        Note: New entries shall follow the following: id > 10, team name = some text, and team data = an empty array [ ].
       </p>
-        <button className='btn btn-light' onClick={scanButtonPressed}>
-          Scan
+      <button className='btn btn-light' onClick={scanButtonPressed}>
+        Scan
         </button>
-        <button className='btn btn-light' onClick={putButtonPressed}>
-          Put
+      <button className='btn btn-light' onClick={putButtonPressed}>
+        Put
         </button>
-        <button className='btn btn-light' onClick={updateButtonPressed}>
-          Update
+      <button className='btn btn-light' onClick={updateButtonPressed}>
+        Update
         </button>
-        <button className='btn btn-light' onClick={deleteButtonPressed}>
-          Delete
+      <button className='btn btn-light' onClick={deleteButtonPressed}>
+        Delete
         </button>
-        <button className='btn btn-light' onClick={getButtonPressed}>
-          Get
+      <button className='btn btn-light' onClick={getButtonPressed}>
+        Get
         </button>
-        <p className='input-aws-table-label'>
-          Team Id (Primary key: items 0 to 10 are write protected)
+      <p className='input-aws-table-label'>
+        Team Id (Primary key: items 0 to 10 are write protected)
         </p>
-        <input
-          type='text'
-          name='team_id'
-          placeholder='Team Id'
-          value={team_id}
-          onChange={onChange}
-          className='input-aws-table'
-        />
-        <p className='input-aws-table-label'>Team Name</p>
-        <input
-          type='text'
-          name='team_name'
-          placeholder='Team Name'
-          value={team_name}
-          onChange={onChange}
-          className='input-aws-table'
-        />
-        <p className='input-aws-table-label'>Team Data (JSON string)</p>
-        <textarea
-          name='team_data'
-          rows='6'
-          placeholder='Team Data'
-          value={team_data}
-          onChange={onChange}
-          className='text-area-aws-table'
-        />
-      </div>
-    );
+      <input
+        type='text'
+        name='team_id'
+        placeholder='Team Id'
+        value={team_id}
+        onChange={onChange}
+        className='input-aws-table'
+      />
+      <p className='input-aws-table-label'>Team Name</p>
+      <input
+        type='text'
+        name='team_name'
+        placeholder='Team Name'
+        value={team_name}
+        onChange={onChange}
+        className='input-aws-table'
+      />
+      <p className='input-aws-table-label'>Team Data (JSON string)</p>
+      <textarea
+        name='team_data'
+        rows='6'
+        placeholder='Team Data'
+        value={team_data}
+        onChange={onChange}
+        className='text-area-aws-table'
+      />
+    </div>
+  );
 };
 
 FetchAWS.propTypes = {
-    scanDynamoDB: PropTypes.func.isRequired,
-    putItemDynamoDB: PropTypes.func.isRequired,
-    updateItemDynamoDB: PropTypes.func.isRequired,
-    deleteItemDynamoDB: PropTypes.func.isRequired,
-    getItemDynamoDB: PropTypes.func.isRequired,
-    setText: PropTypes.func.isRequired,
-    tableName: PropTypes.string.isRequired,
+  scanDynamoDB: PropTypes.func.isRequired,
+  putItemDynamoDB: PropTypes.func.isRequired,
+  updateItemDynamoDB: PropTypes.func.isRequired,
+  deleteItemDynamoDB: PropTypes.func.isRequired,
+  getItemDynamoDB: PropTypes.func.isRequired,
+  setText: PropTypes.func.isRequired,
+  tableName: PropTypes.string.isRequired,
 };
 
 export default FetchAWS;
