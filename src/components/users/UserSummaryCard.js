@@ -1,60 +1,45 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import DataAndMethodsContext from '../../context/dataAndMethods/dataAndMethodsContext';
 
-const UserSummaryCard = ({ user, onMyTeamPage, removeUserFromTeam, addUserToTeam }) => {
+const UserSummaryCard = ({ user, onMyTeamPage }) => {
+  const dataAndMethodsContext = useContext(DataAndMethodsContext);
 
-  const removeUser = () => {
-    //console.log('remove user operation');
-    removeUserFromTeam(login);
-  };
-
-  const addUser = () => {
-    //console.log('add user operation');
-    addUserToTeam(user);
-  };
-
-    const {
-        avatar_url,
-        login,
-    } = user;
-
-    return (
-      <div className='card text-center'>
-        <img
-          src={avatar_url}
-          alt=''
-          className='round-img'
-          style={{ width: '120px' }}
-        />
-        <h3>{login}</h3>
-        <Link
-          to={'/user/' + login}
-          className='btn btn-dark btn-sm my-1'
-        >
-          More info
+  return (
+    <div className='card text-center'>
+      <img
+        src={user.avatar_url}
+        alt=''
+        className='round-img'
+        style={{ width: '120px' }}
+      />
+      <h3>{user.login}</h3>
+      <Link
+        to={'/user/' + user.login}
+        className='btn btn-dark btn-sm my-1'
+      >
+        More info
         </Link>{' '}
-        {onMyTeamPage ? (
-          <button
-            className='btn btn-dark btn-sm my-1'
-            onClick={removeUser}
-          >
-            Remove
+      {onMyTeamPage ? (
+        <button
+          className='btn btn-dark btn-sm my-1'
+          onClick={() => dataAndMethodsContext.removeUserFromTeam(user.login)}
+        >
+          Remove
           </button>
-        ) : (
-          <button className='btn btn-dark btn-sm my-1' onClick={addUser}>
+      ) : (
+          <button className='btn btn-dark btn-sm my-1' onClick={() => dataAndMethodsContext.addUserToTeam(user)}>
             Add
           </button>
         )}
-      </div>
-    );
+    </div>
+  );
 };
 
 UserSummaryCard.propTypes = {
-    user: PropTypes.object.isRequired,
-    onMyTeamPage: PropTypes.bool.isRequired,
-    removeUserFromTeam: PropTypes.func.isRequired,
-    addUserToTeam: PropTypes.func.isRequired,
+  user: PropTypes.object.isRequired,
+  onMyTeamPage: PropTypes.bool.isRequired,
 };
 
 export default UserSummaryCard;

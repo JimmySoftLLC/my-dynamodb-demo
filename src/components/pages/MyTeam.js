@@ -1,11 +1,14 @@
-import React, {Fragment} from 'react';
+import React, { Fragment, useContext } from 'react';
 import UserSummaryCard from '../users/UserSummaryCard';
-import PropTypes from 'prop-types';
+import DataAndMethodsContext from '../../context/dataAndMethods/dataAndMethodsContext';
 
-const MyTeam = ({my_users,onMyTeamPage,removeUserFromTeam,addUserToTeam,setText,team_name}) => {
+const MyTeam = ({ setText, team_name }) => {
+    const dataAndMethodsContext = useContext(DataAndMethodsContext);
+
     const onChange = e => {
         setText(e.target.name, e.target.value);
     };
+
     return (
         <Fragment>
             <h3>My Project Team
@@ -22,25 +25,16 @@ const MyTeam = ({my_users,onMyTeamPage,removeUserFromTeam,addUserToTeam,setText,
                 Based on my search I have selected these developers to collaborate with.
             </p>
             <div className='grid-4 page-bottom-margin '>
-                {my_users.map(user => (
+                {dataAndMethodsContext.my_users.map(user => (
                     <UserSummaryCard
                         key={user.id}
                         user={user}
-                        onMyTeamPage={onMyTeamPage}
-                        removeUserFromTeam={removeUserFromTeam}
-                        addUserToTeam={addUserToTeam}
+                        onMyTeamPage={true}
                     />
                 ))}
             </div>
         </Fragment>
     );
-};
-
-MyTeam.propTypes = {
-    my_users: PropTypes.array.isRequired,
-    onMyTeamPage: PropTypes.bool.isRequired,
-    team_name: PropTypes.string.isRequired,
-    setText: PropTypes.func.isRequired,
 };
 
 export default MyTeam;

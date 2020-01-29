@@ -10,9 +10,9 @@ const About = () => {
       </div>
       <h2 >About myDynamoDB</h2>
       <p className='p'>
-        MyDynamoDB is a react app that saves github user data to a database
+        MyDynamoDB is a react app that saves dataAndMethods user data to a database
         using API gateway, lambda functions, and a dynamoDB database. The user
-        data comes from github using the github API.
+        data comes from dataAndMethods using the dataAndMethods API.
       </p>
       <p className='p'>
         The front end is roughly based on a react project from Brad Traversy's
@@ -89,7 +89,7 @@ const About = () => {
       <p className='p'>
         All this code is available on my git hub account which you can find here{' '}
         <a
-          href='https://github.com/JimmySoftLLC/my-dynamodb-demo'
+          href='https://dataAndMethods.com/JimmySoftLLC/my-dynamodb-demo'
           target='_blank'
           rel='noopener noreferrer'
         >

@@ -1,20 +1,17 @@
 import React, { useEffect, useContext, useState } from 'react';
 import AlertContext from '../../context/alert/alertContext';
-import GithubContext from '../../context/gitHub/gitHubContext';
+import DataAndMethodsContext from '../../context/dataAndMethods/dataAndMethodsContext';
 
-const Search = ({
-  showClear,
-  setOnMyTeamPage,
-  setRedirectTo,
-}) => {
-  const gitHubContext = useContext(GithubContext);
+const Search = () => {
+  const dataAndMethodsContext = useContext(DataAndMethodsContext);
   const alertContext = useContext(AlertContext);
+
   const [text, setText] = useState('');
 
   useEffect(() => {
     // in place of component did mount
-    setOnMyTeamPage(false);
-    setRedirectTo('');
+    dataAndMethodsContext.setOnMyTeamPage(true);
+    dataAndMethodsContext.redirectTo = '';
     // eslint-disable-next-line
   }, []);
 
@@ -27,7 +24,7 @@ const Search = ({
     if (text === '') {
       alertContext.setAlert('Please enter something', 'light', 5000);
     } else {
-      gitHubContext.searchUsers(text);
+      dataAndMethodsContext.searchUsers(text);
       setText('');
     }
   };
@@ -48,8 +45,8 @@ const Search = ({
           className='btn btn-dark btn-block'
         />
       </form>
-      {showClear && (
-        <button className='btn btn-light btn-block' onClick={gitHubContext.clearUsers}>
+      {dataAndMethodsContext.users.length > 0 && (
+        <button className='btn btn-light btn-block' onClick={dataAndMethodsContext.clearUsers}>
           Clear
         </button>
       )}

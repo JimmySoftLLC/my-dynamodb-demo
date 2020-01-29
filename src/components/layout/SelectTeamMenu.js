@@ -4,29 +4,23 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import { Link } from 'react-router-dom';
 import AlertContext from '../../context/alert/alertContext';
+import DataAndMethodsContext from '../../context/dataAndMethods/dataAndMethodsContext';
 
 const SelectTeamMenu = ({
-  my_teams,
-  team_name,
-  team_data,
-  getItemDynamoDB,
-  team_id,
-  scanDynamoDB,
-  putItemDynamoDB,
-  updateItemDynamoDB,
-  tableName,
-  setOnMyTeamPage,
-  setRedirectTo,
 }) => {
+
+  const alertContext = useContext(AlertContext);
+  const dataAndMethodsContext = useContext(DataAndMethodsContext);
+
   useEffect(() => {
     // in place of component did mount
     scanTeamsButtonPressed();
-    setOnMyTeamPage(true);
-    setRedirectTo('');
-    // eslint-disable-next-line
+    dataAndMethodsContext.setOnMyTeamPage(true);
+    dataAndMethodsContext.redirectTo = '';
+    //eslint-disable-next-line
   }, []);
 
-  const alertContext = useContext(AlertContext);
+
 
   const [anchorEl, setAnchorEl] = useState(null);
 
@@ -35,89 +29,89 @@ const SelectTeamMenu = ({
   };
 
   const copyTeamButtonPressed = () => {
-    let foundUniqueId = false;
-    let spillOutIndex = 0;
-    let randomInt = 0;
-    while (foundUniqueId === false) {
-      spillOutIndex++;
-      if (spillOutIndex > 150) break;
-      randomInt = Math.floor(Math.random() * (100 - 11)) + 11;
-      for (let i = 0; i < my_teams.length; i++) {
-        if (randomInt === my_teams[i].team_id) break;
-        if (i === my_teams.length - 1) {
-          foundUniqueId = true;
-        }
-      }
-    }
-    if (foundUniqueId === true) {
-      putItemDynamoDB(tableName, randomInt, team_name + ' copy', team_data);
-      setTimeout(() => scanTeamsButtonPressed(), 1000);
-      setTimeout(() => getUpdates(randomInt), 2000);
-      alertContext.setAlert(
-        'waiting for eventually consistent reads',
-        'light',
-        3000
-      );
-    }
+    // let foundUniqueId = false;
+    // let spillOutIndex = 0;
+    // let randomInt = 0;
+    // while (foundUniqueId === false) {
+    //   spillOutIndex++;
+    //   if (spillOutIndex > 150) break;
+    //   randomInt = Math.floor(Math.random() * (100 - 11)) + 11;
+    //   for (let i = 0; i < my_teams.length; i++) {
+    //     if (randomInt === my_teams[i].team_id) break;
+    //     if (i === my_teams.length - 1) {
+    //       foundUniqueId = true;
+    //     }
+    //   }
+    // }
+    // if (foundUniqueId === true) {
+    //   putItemDynamoDB(tableName, randomInt, team_name + ' copy', team_data);
+    //   setTimeout(() => scanTeamsButtonPressed(), 1000);
+    //   setTimeout(() => getUpdates(randomInt), 2000);
+    //   alertContext.setAlert(
+    //     'waiting for eventually consistent reads',
+    //     'light',
+    //     3000
+    //   );
+    // }
   };
 
   const newTeamButtonPressed = () => {
-    let foundUniqueId = false;
-    let spillOutIndex = 0;
-    let randomInt = 0;
-    while (foundUniqueId === false) {
-      spillOutIndex++;
-      if (spillOutIndex > 150) break;
-      randomInt = Math.floor(Math.random() * (100 - 11)) + 11;
-      for (let i = 0; i < my_teams.length; i++) {
-        if (randomInt === my_teams[i].team_id) break;
-        if (i === my_teams.length - 1) {
-          foundUniqueId = true;
-        }
-      }
-    }
-    let newTeamName = 'new team ' + randomInt.toString();
-    if (foundUniqueId === true) {
-      putItemDynamoDB(tableName, randomInt, newTeamName, '[]');
-      setTimeout(() => scanTeamsButtonPressed(), 1000);
-      setTimeout(() => getUpdates(randomInt), 2000);
-      alertContext.setAlert(
-        'waiting for eventually consistent reads',
-        'light',
-        2000
-      );
-    }
+    // let foundUniqueId = false;
+    // let spillOutIndex = 0;
+    // let randomInt = 0;
+    // while (foundUniqueId === false) {
+    //   spillOutIndex++;
+    //   if (spillOutIndex > 150) break;
+    //   randomInt = Math.floor(Math.random() * (100 - 11)) + 11;
+    //   for (let i = 0; i < my_teams.length; i++) {
+    //     if (randomInt === my_teams[i].team_id) break;
+    //     if (i === my_teams.length - 1) {
+    //       foundUniqueId = true;
+    //     }
+    //   }
+    // }
+    // let newTeamName = 'new team ' + randomInt.toString();
+    // if (foundUniqueId === true) {
+    //   putItemDynamoDB(tableName, randomInt, newTeamName, '[]');
+    //   setTimeout(() => scanTeamsButtonPressed(), 1000);
+    //   setTimeout(() => getUpdates(randomInt), 2000);
+    //   alertContext.setAlert(
+    //     'waiting for eventually consistent reads',
+    //     'light',
+    //     2000
+    //   );
+    // }
   };
 
   const getUpdates = id => {
-    getItemDynamoDB(tableName, parseInt(id));
+    //getItemDynamoDB(tableName, parseInt(id));
   };
 
   const menuItemSelectedGetUpdates = event => {
-    getItemDynamoDB(tableName, parseInt(event.currentTarget.id));
-    setAnchorEl(null);
+    // getItemDynamoDB(tableName, parseInt(event.currentTarget.id));
+    // setAnchorEl(null);
   };
 
   const scanTeamsButtonPressed = () => {
-    scanDynamoDB(tableName);
+    //scanDynamoDB(tableName);
   };
 
   const saveButtonPressed = () => {
-    updateItemDynamoDB(tableName, parseInt(team_id), team_name, team_data);
-    setTimeout(() => scanTeamsButtonPressed(), 1000);
-    alertContext.setAlert(
-      'waiting for eventually consistent reads',
-      'light',
-      1000
-    );
+    // updateItemDynamoDB(tableName, parseInt(team_id), team_name, team_data);
+    // setTimeout(() => scanTeamsButtonPressed(), 1000);
+    // alertContext.setAlert(
+    //   'waiting for eventually consistent reads',
+    //   'light',
+    //   1000
+    // );
   };
 
   const getUpdateButtonPressed = () => {
-    getItemDynamoDB(tableName, parseInt(team_id));
+    // getItemDynamoDB(tableName, parseInt(team_id));
   };
 
   const clickedOffMenu = () => {
-    setAnchorEl(null);
+    // setAnchorEl(null);
   };
 
   return (
@@ -150,7 +144,7 @@ const SelectTeamMenu = ({
         open={Boolean(anchorEl)}
         onClose={clickedOffMenu}
       >
-        {my_teams.map(team => (
+        {dataAndMethodsContext.my_teams.map(team => (
           <MenuItem
             key={team.team_id}
             id={team.team_id}
@@ -162,15 +156,6 @@ const SelectTeamMenu = ({
       </Menu>
     </div>
   );
-};
-
-SelectTeamMenu.propTypes = {
-  my_teams: PropTypes.array.isRequired,
-  getItemDynamoDB: PropTypes.func.isRequired,
-  scanDynamoDB: PropTypes.func.isRequired,
-  updateItemDynamoDB: PropTypes.func.isRequired,
-  putItemDynamoDB: PropTypes.func.isRequired,
-  tableName: PropTypes.string.isRequired,
 };
 
 export default SelectTeamMenu;

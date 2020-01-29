@@ -1,13 +1,19 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
+import AlertContext from '../../context/alert/alertContext';
+import GithubContext from '../../context/dataAndMethods/dataAndMethodsContext';
+import TeamContext from '../../context/team/teamContext';
 
 const RepoItem = ({ repo }) => {
+    const gitHubContext = useContext(GithubContext);
+    const alertContext = useContext(AlertContext);
+    const teamContext = useContext(TeamContext);
     return (
         <div className='card'>
             <h3>
                 <a href={repo.html_url}
-                   target='_blank'
-                   rel='noopener noreferrer'
+                    target='_blank'
+                    rel='noopener noreferrer'
                 >{repo.name}</a>
             </h3>
             <p>{repo.description}</p>

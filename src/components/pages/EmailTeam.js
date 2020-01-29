@@ -1,9 +1,13 @@
-import React, { useEffect} from 'react';
+import React, { useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
-import {Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import Spinner from '../layout/Spinner';
+import AlertContext from '../../context/alert/alertContext';
+import GithubContext from '../../context/dataAndMethods/dataAndMethodsContext';
 
-const EmailTeam = ({setText,getUsersForEmail,my_users,email_subject,email_bcc,email_body,email_to,email_cc,loading }) => {
+const EmailTeam = ({ setText, getUsersForEmail, my_users, email_subject, email_bcc, email_body, email_to, email_cc, loading }) => {
+    const gitHubContext = useContext(GithubContext);
+    const alertContext = useContext(AlertContext);
     useEffect(() => {
         // in place of component did mount
         getUsersForEmail(my_users);
@@ -16,20 +20,20 @@ const EmailTeam = ({setText,getUsersForEmail,my_users,email_subject,email_bcc,em
 
     const scanButtonPressed = () => {
         let myConvertedEmailBody = '';
-        for (let i = 0; i < email_body.length; i++){
+        for (let i = 0; i < email_body.length; i++) {
             myConvertedEmailBody += convertForEmailMailTo(email_body[i]);
         }
-        var mailto_link = 'mailto:'+email_to+'?subject='+email_subject+'&cc='+email_cc+'&bcc='+email_bcc+'&body='+myConvertedEmailBody;
-        window.open(mailto_link,'emailWindow');
+        var mailto_link = 'mailto:' + email_to + '?subject=' + email_subject + '&cc=' + email_cc + '&bcc=' + email_bcc + '&body=' + myConvertedEmailBody;
+        window.open(mailto_link, 'emailWindow');
     };
 
     const convertForEmailMailTo = (input) => {
         let myCharNumb = input.charCodeAt(0);
         if ((myCharNumb >= 65 && myCharNumb <= 90) || (myCharNumb >= 97 && myCharNumb <= 122) || (myCharNumb >= 48 && myCharNumb <= 57)) {
             return input;
-        }else{
+        } else {
             let myHex = '00' + input.charCodeAt(0).toString(16);
-            return '%'+ myHex.slice(-2);
+            return '%' + myHex.slice(-2);
         }
     };
 
@@ -40,7 +44,7 @@ const EmailTeam = ({setText,getUsersForEmail,my_users,email_subject,email_bcc,em
             <div>
                 <h3 className='page-top-margin'>Email team</h3>
                 <p className='p'>
-                    The following is a email form for team members that have public email addresses at github. You now can send them an invitation to collaborate using your installed email client.
+                    The following is a email form for team members that have public email addresses at dataAndMethods. You now can send them an invitation to collaborate using your installed email client.
                 </p>
                 <Link to='/myTeam' className='btn btn-light'>
                     <i className="fas fa-arrow-left"></i> My Team

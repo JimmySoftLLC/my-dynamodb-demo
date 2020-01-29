@@ -1,8 +1,12 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { useContext } from 'react';
+import AlertContext from '../../context/alert/alertContext';
+import GithubContext from '../../context/dataAndMethods/dataAndMethodsContext';
+import TeamContext from '../../context/team/teamContext';
 
 const FetchAWS = ({ team_id, team_name, team_data, setText, scanDynamoDB, putItemDynamoDB, updateItemDynamoDB, deleteItemDynamoDB, getItemDynamoDB, tableName }) => {
-
+  const gitHubContext = useContext(GithubContext);
+  const alertContext = useContext(AlertContext);
+  const teamContext = useContext(TeamContext);
   const onChange = e => {
     setText(e.target.name, e.target.value);
   };
@@ -104,16 +108,6 @@ const FetchAWS = ({ team_id, team_name, team_data, setText, scanDynamoDB, putIte
       />
     </div>
   );
-};
-
-FetchAWS.propTypes = {
-  scanDynamoDB: PropTypes.func.isRequired,
-  putItemDynamoDB: PropTypes.func.isRequired,
-  updateItemDynamoDB: PropTypes.func.isRequired,
-  deleteItemDynamoDB: PropTypes.func.isRequired,
-  getItemDynamoDB: PropTypes.func.isRequired,
-  setText: PropTypes.func.isRequired,
-  tableName: PropTypes.string.isRequired,
 };
 
 export default FetchAWS;

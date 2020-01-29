@@ -1,11 +1,11 @@
 import React, { useContext } from 'react';
 import UserSummaryCard from './UserSummaryCard';
 import Spinner from '../layout/Spinner';
-import GitHubContext from '../../context/gitHub/gitHubContext';
+import DataAndMethodsContext from '../../context/dataAndMethods/dataAndMethodsContext';
 
 const Users = props => {
-  const gitHubContext = useContext(GitHubContext);
-  const { loading, users } = gitHubContext;
+  const dataAndMethodsContext = useContext(DataAndMethodsContext);
+  const { loading, users } = dataAndMethodsContext;
 
   if (loading) {
     return <Spinner />;
@@ -16,9 +16,7 @@ const Users = props => {
           <UserSummaryCard
             key={user.id}
             user={user}
-            onMyTeamPage={props.onMyTeamPage}
-            removeUserFromTeam={props.removeUserFromTeam}
-            addUserToTeam={props.addUserToTeam}
+            onMyTeamPage={false}
           />
         ))}
       </div>

@@ -16,39 +16,23 @@ import EmailTeam from './components/pages/EmailTeam';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import AlertState from './context/alert/AlertState';
 import AlertDialogState from './context/alertDialog/AlertDialogState';
-import GitHubState from './context/gitHub/gitHubState';
+import DataAndMethodsState from './context/dataAndMethods/dataAndMethodsState';
 import './App.css';
 
 const App = () => {
-  const [users, setUsers] = useState([]);
-  const [loading, setLoading] = useState(false);
   const [amazonResponse, setAmazonResponse] = useState(' ');
-  const [my_users, setMy_users] = useState([]);
-  const [my_teams, setMy_teams] = useState([]);
-  const [team_id, setTeam_id] = useState(0);
-  const [team_name, setTeam_name] = useState(' ');
-  const [team_data, setTeam_data] = useState(' ');
-  const [search_text, setSearch_text] = useState('');
   const [tableName] = useState('my_open_source_team');
-  const [email_subject, setEmail_subject] = useState('');
-  const [email_bcc, setEmail_bcc] = useState('');
-  const [email_body, setEmail_body] = useState('');
-  const [email_to, setEmail_to] = useState('');
-  const [email_cc, setEmail_cc] = useState('');
-  const [redirectTo, setRedirectTo] = useState('');
-  const [onMyTeamPage, setOnMyTeamPage] = useState(false);
-
   const lambdaFunctionURL =
     'https://yfyft0meu9.execute-api.us-east-1.amazonaws.com/default/restapi';
 
   const getUsersForEmail = async users => {
-    setLoading(true);
-    setEmail_to('');
+    //setLoading(true);
+    //setEmail_to('');
     let myToEmails = '';
     for (let i = 0; i < users.length; i++) {
       try {
         const res = await axios.get(
-          'https://api.github.com/users/' +
+          'https://api.dataAndMethods.com/users/' +
           users[i].login +
           '?client_id=' +
           process.env.REACT_APP_GITHUB_CLIENT_ID +
@@ -60,8 +44,8 @@ const App = () => {
         }
       } catch (err) { }
     }
-    setEmail_to(myToEmails);
-    setLoading(false);
+    //setEmail_to(myToEmails);
+    //setLoading(false);
   };
 
   const scanDynamoDB = async TableName => {
@@ -92,10 +76,10 @@ const App = () => {
           '\n';
       }
       setAmazonResponse(myMessage);
-      setMy_teams(myResData.Items);
+      //setMy_teams(myResData.Items);
     } catch (err) {
       setAmazonResponse('');
-      setMy_teams([]);
+      //setMy_teams([]);
     }
   };
 
@@ -185,11 +169,11 @@ const App = () => {
         }
       );
       setAmazonResponse(JSON.stringify(res.data));
-      setTeam_id('');
-      setTeam_name('');
-      setTeam_data('[]');
-      setMy_users([]);
-      setLoading(false);
+      //setTeam_id('');
+      //setTeam_name('');
+      //setTeam_data('[]');
+      //setMy_users([]);
+      //setLoading(false);
     } catch (err) {
       // setAlertDialog(err.message);
     }
@@ -216,91 +200,52 @@ const App = () => {
         }
       );
       setAmazonResponse(JSON.stringify(res.data));
-      setTeam_id(res.data.Item.team_id);
-      setTeam_name(res.data.Item.team_name);
-      setTeam_data(res.data.Item.team_data);
-      setMy_users(JSON.parse(res.data.Item.team_data));
+      //setTeam_id(res.data.Item.team_id);
+      //setTeam_name(res.data.Item.team_name);
+      //setTeam_data(res.data.Item.team_data);
+      //(JSON.parse(res.data.Item.team_data));
     } catch (err) {
       // setAlertDialog(err.message);
     }
   };
 
-  const removeUserFromTeam = async (login, redirectPath) => {
-    let tempUser = [];
-    for (var i = 0; i < my_users.length; i++) {
-      if (my_users[i].login !== login) {
-        tempUser.push(my_users[i]);
-      }
-    }
-    setMy_users(tempUser);
-    setTeam_data(JSON.stringify(tempUser));
-    setRedirectTo(redirectPath);
-  };
-
-  const addUserToTeam = async (myUser, redirectPath) => {
-    let foundDuplicate = false;
-    for (let j = 0; j < my_users.length; j++) {
-      if (my_users[j].login === myUser.login) {
-        foundDuplicate = true;
-      }
-    }
-    if (foundDuplicate) {
-      // setAlertDialog(
-      //   'Developer already in My Team, human cloning not currently implemented.'
-      // );
-    } else {
-      let tempUser = my_users.slice(0);
-      tempUser.push(myUser);
-      let tempUser2 = [];
-      for (var i = 0; i < users.length; i++) {
-        if (users[i].login !== myUser.login) {
-          tempUser2.push(users[i]);
-        }
-      }
-      setTeam_data(JSON.stringify(tempUser));
-      setMy_users(tempUser);
-      setUsers(tempUser2);
-    }
-    setRedirectTo(redirectPath);
-  };
-
   const setText = (name, value) => {
     switch (name) {
       case 'team_name':
-        setTeam_name(value);
+        //setTeam_name(value);
         break;
       case 'team_id':
-        setTeam_id(value);
+        //setTeam_id(value);
         break;
       case 'team_data':
-        setTeam_data(value);
+        //setTeam_data(value);
         break;
       case 'search_text':
-        setSearch_text(value);
+        //setSearch_text(value);
         break;
       case 'email_subject':
-        setEmail_subject(value);
+        //setEmail_subject(value);
         break;
       case 'email_bcc':
-        setEmail_bcc(value);
+        //setEmail_bcc(value);
         break;
       case 'email_body':
-        setEmail_body(value);
+        //setEmail_body(value);
         break;
       case 'email_cc':
-        setEmail_cc(value);
+        //setEmail_cc(value);
         break;
       case 'email_to':
-        setEmail_to(value);
+        //setEmail_to(value);
         break;
       default:
     }
   };
 
   return (
-    <GitHubState>
-      <AlertState>
-        <AlertDialogState>
+    <AlertState>
+      <AlertDialogState>
+        <DataAndMethodsState>
           <Router>
             <div className='App'>
               <Navbar />
@@ -313,22 +258,8 @@ const App = () => {
                       <Fragment>
                         <Alert />
                         <AlertDialog />
-                        <Search
-                          setRedirectTo={setRedirectTo}
-                          setOnMyTeamPage={setOnMyTeamPage}
-                          showClear={users.length > 0 ? true : false}
-                          search_text={search_text}
-                          setText={setText}
-                        />{' '}
-                        <Users
-                          loading={loading}
-                          users={users}
-                          my_users={my_users}
-                          removeUserFromTeam={removeUserFromTeam}
-                          addUserToTeam={addUserToTeam}
-                          onMyTeamPage={onMyTeamPage}
-                          setOnMyTeamPage={setOnMyTeamPage}
-                        />{' '}
+                        <Search />{' '}
+                        <Users />{' '}
                       </Fragment>
                     )}
                   />{' '}
@@ -339,28 +270,8 @@ const App = () => {
                     render={() => (
                       <Fragment>
                         <Alert />
-                        <SelectTeamMenu
-                          setRedirectTo={setRedirectTo}
-                          setOnMyTeamPage={setOnMyTeamPage}
-                          my_teams={my_teams}
-                          scanDynamoDB={scanDynamoDB}
-                          getItemDynamoDB={getItemDynamoDB}
-                          putItemDynamoDB={putItemDynamoDB}
-                          updateItemDynamoDB={updateItemDynamoDB}
-                          team_id={team_id}
-                          team_name={team_name}
-                          team_data={team_data}
-                          tableName={tableName}
-                        />{' '}
-                        <MyTeam
-                          my_users={my_users}
-                          removeUserFromTeam={removeUserFromTeam}
-                          addUserToTeam={addUserToTeam}
-                          onMyTeamPage={onMyTeamPage}
-                          team_name={team_name}
-                          setText={setText}
-                          setOnMyTeamPage={setOnMyTeamPage}
-                        />{' '}
+                        <SelectTeamMenu />{' '}
+                        <MyTeam />{' '}
                       </Fragment>
                     )}
                   />{' '}
@@ -370,14 +281,7 @@ const App = () => {
                     render={() => (
                       <Fragment>
                         <EmailTeam
-                          loading={loading}
-                          email_to={email_to}
-                          email_cc={email_cc}
-                          email_subject={email_subject}
-                          email_bcc={email_bcc}
-                          email_body={email_body}
                           getUsersForEmail={getUsersForEmail}
-                          my_users={my_users}
                           setText={setText}
                         />{' '}
                       </Fragment>
@@ -388,18 +292,7 @@ const App = () => {
                     path='/myDynamoTable'
                     render={() => (
                       <Fragment>
-                        <FetchAWS
-                          tableName={tableName}
-                          scanDynamoDB={scanDynamoDB}
-                          putItemDynamoDB={putItemDynamoDB}
-                          updateItemDynamoDB={updateItemDynamoDB}
-                          deleteItemDynamoDB={deleteItemDynamoDB}
-                          getItemDynamoDB={getItemDynamoDB}
-                          team_id={team_id}
-                          team_name={team_name}
-                          team_data={team_data}
-                          setText={setText}
-                        />{' '}
+                        <FetchAWS />{' '}
                         <MyDynamoTable amazonResponse={amazonResponse} />{' '}
                       </Fragment>
                     )}
@@ -408,14 +301,7 @@ const App = () => {
                     exact
                     path='/user/:login'
                     render={props => (
-                      <UserDetailsCard
-                        {...props}
-                        loading={loading}
-                        removeUserFromTeam={removeUserFromTeam}
-                        addUserToTeam={addUserToTeam}
-                        onMyTeamPage={onMyTeamPage}
-                        redirectTo={redirectTo}
-                      />
+                      <UserDetailsCard />
                     )}
                   />{' '}
                   <Route />
@@ -424,9 +310,9 @@ const App = () => {
               <Footer />
             </div>{' '}
           </Router>{' '}
-        </AlertDialogState>
-      </AlertState>
-    </GitHubState>
+        </DataAndMethodsState>
+      </AlertDialogState>
+    </AlertState>
   );
 };
 
