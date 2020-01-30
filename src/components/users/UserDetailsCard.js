@@ -1,37 +1,34 @@
 import React, { Fragment, useEffect, useContext } from 'react';
-import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import Repos from '../repos/Repos';
 import Spinner from '../layout/Spinner';
 import { Redirect } from 'react-router-dom';
-import AlertContext from '../../context/alert/alertContext';
-import GithubContext from '../../context/dataAndMethods/dataAndMethodsContext';
-import TeamContext from '../../context/team/teamContext';
+import DataAndMethodsContext from '../../context/dataAndMethods/dataAndMethodsContext';
 
-const User = ({ user, getUser, repos, match, getUserRepos, loading, removeUserFromTeam, addUserToTeam, redirectTo, onMyTeamPage }) => {
-  const gitHubContext = useContext(GithubContext);
-  const alertContext = useContext(AlertContext);
-  const teamContext = useContext(TeamContext);
+const User = ({ match }) => {
+  const dataAndMethodsContext = useContext(DataAndMethodsContext);
+
   useEffect(() => {
     // in place of component did mount
-    getUser(match.params.login);
-    getUserRepos(match.params.login);
+    dataAndMethodsContext.getUser(match.params.login);
+    dataAndMethodsContext.getUserRepos(match.params.login);
+    dataAndMethodsContext.setRedirectTo('');
     // eslint-disable-next-line
   }, []);
 
   const removeUser = () => {
-    if (onMyTeamPage) {
-      removeUserFromTeam(login, '/myTeam');
+    if (dataAndMethodsContext.onMyTeamPage) {
+      dataAndMethodsContext.removeUserFromTeam(login, '/myTeam');
     } else {
-      removeUserFromTeam(login, '/myTeam');
+      dataAndMethodsContext.removeUserFromTeam(login, '/');
     }
   };
 
   const addUser = () => {
-    if (onMyTeamPage) {
-      addUserToTeam(user, '/');
+    if (dataAndMethodsContext.onMyTeamPage) {
+      dataAndMethodsContext.addUserToTeam(dataAndMethodsContext.user, '/myTeam');
     } else {
-      addUserToTeam(user, '/');
+      dataAndMethodsContext.addUserToTeam(dataAndMethodsContext.user, '/');
     }
   };
 
@@ -50,12 +47,12 @@ const User = ({ user, getUser, repos, match, getUserRepos, loading, removeUserFr
     public_gists,
     hireable,
     email,
-  } = user;
+  } = dataAndMethodsContext.user;
 
-  if (loading) return <Spinner />;
+  if (dataAndMethodsContext.loading) return <Spinner />;
 
   let redirectToLocal;
-  switch (redirectTo) {
+  switch (dataAndMethodsContext.redirectTo) {
     case "/":
       redirectToLocal = <Redirect to='/' />;
       break;
@@ -64,6 +61,7 @@ const User = ({ user, getUser, repos, match, getUserRepos, loading, removeUserFr
       break;
     default:
       redirectToLocal = null;
+      break;
   }
 
   return (
@@ -105,9 +103,9 @@ const User = ({ user, getUser, repos, match, getUserRepos, loading, removeUserFr
             target='_blank'
             rel='noopener noreferrer'
           >
-            Visit dataAndMethods Profile
+            Visit Github Profile
             </a>
-          {onMyTeamPage ? (
+          {dataAndMethodsContext.onMyTeamPage ? (
             <button
               className='btn btn-dark my-1'
               onClick={removeUser}
@@ -161,22 +159,9 @@ const User = ({ user, getUser, repos, match, getUserRepos, loading, removeUserFr
         <div className='badge badge-light'>Public Repos: {public_repos}</div>
         <div className='badge badge-dark'>Public Gists: {public_gists}</div>
       </div>
-      <Repos repos={repos} />
+      <Repos repos={dataAndMethodsContext.repos} />
       <p className='p page-bottom-margin'></p>
     </Fragment>
   );
 };
-
-User.propTypes = {
-  loading: PropTypes.bool.isRequired,
-  user: PropTypes.object.isRequired,
-  repos: PropTypes.array.isRequired,
-  getUser: PropTypes.func.isRequired,
-  getUserRepos: PropTypes.func.isRequired,
-  removeUserFromTeam: PropTypes.func.isRequired,
-  addUserToTeam: PropTypes.func.isRequired,
-  redirectTo: PropTypes.string.isRequired,
-  onMyTeamPage: PropTypes.bool.isRequired,
-};
-
 export default User;

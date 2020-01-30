@@ -8,16 +8,16 @@ const Search = () => {
 
   const [text, setText] = useState('');
 
-  useEffect(() => {
-    // in place of component did mount
-    dataAndMethodsContext.setOnMyTeamPage(true);
-    dataAndMethodsContext.redirectTo = '';
-    // eslint-disable-next-line
-  }, []);
-
   const onChange = e => {
     setText(e.target.value);
   };
+
+  useEffect(() => {
+    // in place of component did mount
+    dataAndMethodsContext.setOnMyTeamPage(false);
+    dataAndMethodsContext.setRedirectTo(' ');
+    // eslint-disable-next-line
+  }, []);
 
   const onSubmit = e => {
     e.preventDefault();

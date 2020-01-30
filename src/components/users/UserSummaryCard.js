@@ -1,9 +1,8 @@
 import React, { useContext } from 'react';
-import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import DataAndMethodsContext from '../../context/dataAndMethods/dataAndMethodsContext';
 
-const UserSummaryCard = ({ user, onMyTeamPage }) => {
+const UserSummaryCard = ({ user }) => {
   const dataAndMethodsContext = useContext(DataAndMethodsContext);
 
   return (
@@ -21,7 +20,7 @@ const UserSummaryCard = ({ user, onMyTeamPage }) => {
       >
         More info
         </Link>{' '}
-      {onMyTeamPage ? (
+      {dataAndMethodsContext.onMyTeamPage ? (
         <button
           className='btn btn-dark btn-sm my-1'
           onClick={() => dataAndMethodsContext.removeUserFromTeam(user.login)}
@@ -35,11 +34,6 @@ const UserSummaryCard = ({ user, onMyTeamPage }) => {
         )}
     </div>
   );
-};
-
-UserSummaryCard.propTypes = {
-  user: PropTypes.object.isRequired,
-  onMyTeamPage: PropTypes.bool.isRequired,
 };
 
 export default UserSummaryCard;

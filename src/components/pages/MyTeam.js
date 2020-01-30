@@ -1,12 +1,19 @@
-import React, { Fragment, useContext } from 'react';
+import React, { Fragment, useContext, useEffect } from 'react';
 import UserSummaryCard from '../users/UserSummaryCard';
 import DataAndMethodsContext from '../../context/dataAndMethods/dataAndMethodsContext';
 
-const MyTeam = ({ setText, team_name }) => {
+const MyTeam = () => {
     const dataAndMethodsContext = useContext(DataAndMethodsContext);
 
+    useEffect(() => {
+        // in place of component did mount
+        dataAndMethodsContext.setOnMyTeamPage(true);
+        dataAndMethodsContext.setRedirectTo(' ');
+        // eslint-disable-next-line
+    }, []);
+
     const onChange = e => {
-        setText(e.target.name, e.target.value);
+        dataAndMethodsContext.setTeam_name(e.target.value);
     };
 
     return (
@@ -16,7 +23,7 @@ const MyTeam = ({ setText, team_name }) => {
                     type='text'
                     name='team_name'
                     placeholder='Team Name'
-                    value={team_name}
+                    value={dataAndMethodsContext.team_name}
                     onChange={onChange}
                     className='input-aws-table'
                 />
@@ -25,11 +32,10 @@ const MyTeam = ({ setText, team_name }) => {
                 Based on my search I have selected these developers to collaborate with.
             </p>
             <div className='grid-4 page-bottom-margin '>
-                {dataAndMethodsContext.my_users.map(user => (
+                {dataAndMethodsContext.my_team.map(user => (
                     <UserSummaryCard
                         key={user.id}
                         user={user}
-                        onMyTeamPage={true}
                     />
                 ))}
             </div>

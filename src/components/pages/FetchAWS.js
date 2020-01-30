@@ -1,49 +1,57 @@
 import React, { useContext } from 'react';
-import AlertContext from '../../context/alert/alertContext';
-import GithubContext from '../../context/dataAndMethods/dataAndMethodsContext';
-import TeamContext from '../../context/team/teamContext';
+import DataAndMethodsContext from '../../context/dataAndMethods/dataAndMethodsContext';
 
-const FetchAWS = ({ team_id, team_name, team_data, setText, scanDynamoDB, putItemDynamoDB, updateItemDynamoDB, deleteItemDynamoDB, getItemDynamoDB, tableName }) => {
-  const gitHubContext = useContext(GithubContext);
-  const alertContext = useContext(AlertContext);
-  const teamContext = useContext(TeamContext);
+const FetchAWS = () => {
+  const dataAndMethodsContext = useContext(DataAndMethodsContext);
+
   const onChange = e => {
-    setText(e.target.name, e.target.value);
+    switch (e.target.name) {
+      case 'team_name':
+        dataAndMethodsContext.setTeam_name(e.target.value);
+        break;
+      case 'team_id':
+        dataAndMethodsContext.setTeam_id(e.target.value);
+        break;
+      case 'team_data':
+        dataAndMethodsContext.setTeam_data(e.target.value);
+        break;
+      default:
+    };
   };
 
   const scanButtonPressed = () => {
-    scanDynamoDB(tableName);
+    dataAndMethodsContext.scanDynamoDB(dataAndMethodsContext.tableName);
   };
 
   const putButtonPressed = () => {
-    putItemDynamoDB(
-      tableName,
-      parseInt(team_id),
-      team_name,
-      team_data
+    dataAndMethodsContext.putItemDynamoDB(
+      dataAndMethodsContext.tableName,
+      parseInt(dataAndMethodsContext.team_id),
+      dataAndMethodsContext.team_name,
+      dataAndMethodsContext.team_data
     );
   };
 
   const updateButtonPressed = () => {
-    updateItemDynamoDB(
-      tableName,
-      parseInt(team_id),
-      team_name,
-      team_data
+    dataAndMethodsContext.updateItemDynamoDB(
+      dataAndMethodsContext.tableName,
+      parseInt(dataAndMethodsContext.team_id),
+      dataAndMethodsContext.team_name,
+      dataAndMethodsContext.team_data
     );
   };
 
   const deleteButtonPressed = () => {
-    deleteItemDynamoDB(
-      tableName,
-      parseInt(team_id)
+    dataAndMethodsContext.deleteItemDynamoDB(
+      dataAndMethodsContext.tableName,
+      parseInt(dataAndMethodsContext.team_id)
     );
   };
 
   const getButtonPressed = () => {
-    getItemDynamoDB(
-      tableName,
-      parseInt(team_id)
+    dataAndMethodsContext.getItemDynamoDB(
+      dataAndMethodsContext.tableName,
+      parseInt(dataAndMethodsContext.team_id)
     );
   };
 
@@ -84,7 +92,7 @@ const FetchAWS = ({ team_id, team_name, team_data, setText, scanDynamoDB, putIte
         type='text'
         name='team_id'
         placeholder='Team Id'
-        value={team_id}
+        value={dataAndMethodsContext.team_id}
         onChange={onChange}
         className='input-aws-table'
       />
@@ -93,7 +101,7 @@ const FetchAWS = ({ team_id, team_name, team_data, setText, scanDynamoDB, putIte
         type='text'
         name='team_name'
         placeholder='Team Name'
-        value={team_name}
+        value={dataAndMethodsContext.team_name}
         onChange={onChange}
         className='input-aws-table'
       />
@@ -102,7 +110,7 @@ const FetchAWS = ({ team_id, team_name, team_data, setText, scanDynamoDB, putIte
         name='team_data'
         rows='6'
         placeholder='Team Data'
-        value={team_data}
+        value={dataAndMethodsContext.team_data}
         onChange={onChange}
         className='text-area-aws-table'
       />

@@ -1,24 +1,52 @@
 import React, { useEffect, useContext } from 'react';
-import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import Spinner from '../layout/Spinner';
-import AlertContext from '../../context/alert/alertContext';
-import GithubContext from '../../context/dataAndMethods/dataAndMethodsContext';
+import DataAndMethodsContext from '../../context/dataAndMethods/dataAndMethodsContext';
 
-const EmailTeam = ({ setText, getUsersForEmail, my_users, email_subject, email_bcc, email_body, email_to, email_cc, loading }) => {
-    const gitHubContext = useContext(GithubContext);
-    const alertContext = useContext(AlertContext);
+const EmailTeam = () => {
+    const dataAndMethodsContext = useContext(DataAndMethodsContext);
+
     useEffect(() => {
         // in place of component did mount
-        getUsersForEmail(my_users);
+        dataAndMethodsContext.getUsersForEmail(my_team);
+        dataAndMethodsContext.setEmail_subject('');
+        dataAndMethodsContext.setEmail_bcc('');
+        dataAndMethodsContext.setEmail_body('');
+        dataAndMethodsContext.setEmail_cc('');
         // eslint-disable-next-line
     }, []);
 
+    const { email_body,
+        my_team,
+        email_to,
+        email_subject,
+        email_cc,
+        email_bcc,
+        loading,
+    } = dataAndMethodsContext;
+
     const onChange = e => {
-        setText(e.target.name, e.target.value);
+        switch (e.target.name) {
+            case 'email_subject':
+                dataAndMethodsContext.setEmail_subject(e.target.value);
+                break;
+            case 'email_bcc':
+                dataAndMethodsContext.setEmail_bcc(e.target.value);
+                break;
+            case 'email_body':
+                dataAndMethodsContext.setEmail_body(e.target.value);
+                break;
+            case 'email_cc':
+                dataAndMethodsContext.setEmail_cc(e.target.value);
+                break;
+            case 'email_to':
+                dataAndMethodsContext.setEmail_to(e.target.value);
+                break;
+            default:
+        }
     };
 
-    const scanButtonPressed = () => {
+    const sendEmailPressed = () => {
         let myConvertedEmailBody = '';
         for (let i = 0; i < email_body.length; i++) {
             myConvertedEmailBody += convertForEmailMailTo(email_body[i]);
@@ -49,7 +77,7 @@ const EmailTeam = ({ setText, getUsersForEmail, my_users, email_subject, email_b
                 <Link to='/myTeam' className='btn btn-light'>
                     <i className="fas fa-arrow-left"></i> My Team
                 </Link>
-                <button className='btn btn-light' onClick={scanButtonPressed}>
+                <button className='btn btn-light' onClick={sendEmailPressed}>
                     Send email
                 </button>
                 <p className='input-aws-table-label'>To</p>
@@ -103,16 +131,4 @@ const EmailTeam = ({ setText, getUsersForEmail, my_users, email_subject, email_b
         );
     }
 };
-
-EmailTeam.propTypes = {
-    setText: PropTypes.func.isRequired,
-    getUsersForEmail: PropTypes.func.isRequired,
-    my_users: PropTypes.array.isRequired,
-    email_subject: PropTypes.string.isRequired,
-    email_bcc: PropTypes.string.isRequired,
-    email_body: PropTypes.string.isRequired,
-    email_to: PropTypes.string.isRequired,
-    email_cc: PropTypes.string.isRequired
-};
-
 export default EmailTeam;
