@@ -1,6 +1,9 @@
 import React, { Fragment, useContext, useEffect } from 'react';
 import UserSummaryCard from '../users/UserSummaryCard';
 import DataAndMethodsContext from '../../context/dataAndMethods/dataAndMethodsContext';
+import Alert from '../layout/Alert';
+import AlertDialog from '../layout/AlertDialog';
+import MyTeamMenuAndButtons from '../layout/MyTeamMenuAndButtons';
 
 const MyTeam = () => {
     const dataAndMethodsContext = useContext(DataAndMethodsContext);
@@ -18,6 +21,9 @@ const MyTeam = () => {
 
     return (
         <Fragment>
+            <Alert />
+            <AlertDialog />
+            <MyTeamMenuAndButtons />{' '}
             <h3>My Project Team
                 <input
                     type='text'

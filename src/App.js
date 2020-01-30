@@ -1,16 +1,11 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import Navbar from './components/layout/Navbar';
-import Users from './components/users/Users';
-import FetchAWS from './components/pages/FetchAWS';
 import UserDetailsCard from './components/users/UserDetailsCard';
-import Search from './components/pages/Search';
-import Alert from './components/layout/Alert';
-import AlertDialog from './components/layout/AlertDialog';
 import About from './components/pages/About';
+import FindDevelopers from './components/pages/FindDevelopers';
 import MyTeam from './components/pages/MyTeam';
-import MyDynamoTable from './components/pages/MyDynamoTable';
+import MyDynamoTable from './components/pages/MyTable';
 import Footer from './components/layout/Footer';
-import SelectTeamMenu from './components/layout/SelectTeamMenu';
 import EmailTeam from './components/pages/EmailTeam';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import AlertState from './context/alert/AlertState';
@@ -28,59 +23,12 @@ const App = () => {
               <Navbar />
               <div className='container'>
                 <Switch>
-                  <Route
-                    exact
-                    path='/'
-                    render={() => (
-                      <Fragment>
-                        <Alert />
-                        <AlertDialog />
-                        <Search />{' '}
-                        <Users />{' '}
-                      </Fragment>
-                    )}
-                  />{' '}
+                  <Route exact path='/findDevelopers' component={FindDevelopers} />{' '}
                   <Route exact path='/about' component={About} />{' '}
-                  <Route
-                    exact
-                    path='/myTeam'
-                    render={() => (
-                      <Fragment>
-                        <Alert />
-                        <AlertDialog />
-                        <SelectTeamMenu />{' '}
-                        <MyTeam />{' '}
-                      </Fragment>
-                    )}
-                  />{' '}
-                  <Route
-                    exact
-                    path='/myEmail'
-                    render={() => (
-                      <Fragment>
-                        <AlertDialog />
-                        <EmailTeam />{' '}
-                      </Fragment>
-                    )}
-                  />{' '}
-                  <Route
-                    exact
-                    path='/myDynamoTable'
-                    render={() => (
-                      <Fragment>
-                        <AlertDialog />
-                        <FetchAWS />{' '}
-                        <MyDynamoTable />{' '}
-                      </Fragment>
-                    )}
-                  />{' '}
-                  <Route
-                    exact
-                    path='/user/:login'
-                    render={props => (
-                      <UserDetailsCard {...props} />
-                    )}
-                  />{' '}
+                  <Route exact path='/' component={MyTeam} />{' '}
+                  <Route exact path='/myEmail' component={EmailTeam} />{' '}
+                  <Route exact path='/myDynamoTable' component={MyDynamoTable} />{' '}
+                  <Route exact path='/user/:login' component={UserDetailsCard} />{' '}
                   <Route />
                 </Switch>{' '}
               </div>{' '}

@@ -10,12 +10,12 @@ const Navbar = props => {
       </h1>
       <ul>
         <li>
-          <Link to='/myTeam'>
+          <Link to='/'>
             <i className='fas fa-users'></i> My Team
           </Link>
         </li>
         <li>
-          <Link to='/'>
+          <Link to='/findDevelopers'>
             <i className='fas fa-search'></i> Find Developers
           </Link>
         </li>

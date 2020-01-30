@@ -1,18 +1,20 @@
 import React, { Fragment } from 'react';
+import AlertDialog from '../../components/layout/AlertDialog';
 
 const About = () => {
   return (
     <Fragment>
+      <AlertDialog />
       <h2 className='page-top-margin'>Instructional video</h2>
       <div className="video-responsive">
         <iframe width="560" height="315" title="myFrame" src="https://www.youtube.com/embed/6VQAzkumQfA" frameBorder="0"
-                allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
+          allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
       </div>
       <h2 >About myDynamoDB</h2>
       <p className='p'>
-        MyDynamoDB is a react app that saves dataAndMethods user data to a database
+        MyDynamoDB is a react app that saves github user data to a database
         using API gateway, lambda functions, and a dynamoDB database. The user
-        data comes from dataAndMethods using the dataAndMethods API.
+        data comes from github using the github API.
       </p>
       <p className='p'>
         The front end is roughly based on a react project from Brad Traversy's
@@ -89,7 +91,7 @@ const About = () => {
       <p className='p'>
         All this code is available on my git hub account which you can find here{' '}
         <a
-          href='https://dataAndMethods.com/JimmySoftLLC/my-dynamodb-demo'
+          href='https://github.com/JimmySoftLLC/my-dynamodb-demo'
           target='_blank'
           rel='noopener noreferrer'
         >

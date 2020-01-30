@@ -1,6 +1,9 @@
-import React, { useEffect, useContext, useState } from 'react';
+import React, { useEffect, useContext, useState, Fragment } from 'react';
 import AlertContext from '../../context/alert/alertContext';
 import DataAndMethodsContext from '../../context/dataAndMethods/dataAndMethodsContext';
+import Alert from '../layout/Alert';
+import AlertDialog from '../layout/AlertDialog';
+import Users from '../users/Users';
 
 const Search = () => {
   const dataAndMethodsContext = useContext(DataAndMethodsContext);
@@ -30,27 +33,32 @@ const Search = () => {
   };
 
   return (
-    <div>
-      <form onSubmit={onSubmit} className='form page-top-margin'>
-        <input
-          type='text'
-          name='text'
-          placeholder='find developers...'
-          value={text}
-          onChange={onChange}
-        />
-        <input
-          type='submit'
-          value='Search'
-          className='btn btn-dark btn-block'
-        />
-      </form>
-      {dataAndMethodsContext.users.length > 0 && (
-        <button className='btn btn-light btn-block' onClick={dataAndMethodsContext.clearUsers}>
-          Clear
+    <Fragment>
+      <Alert />
+      <AlertDialog />
+      <div>
+        <form onSubmit={onSubmit} className='form page-top-margin'>
+          <input
+            type='text'
+            name='text'
+            placeholder='find developers...'
+            value={text}
+            onChange={onChange}
+          />
+          <input
+            type='submit'
+            value='Search'
+            className='btn btn-dark btn-block'
+          />
+        </form>
+        {dataAndMethodsContext.users.length > 0 && (
+          <button className='btn btn-light btn-block' onClick={dataAndMethodsContext.clearUsers}>
+            Clear
         </button>
-      )}
-    </div>
+        )}
+      </div>
+      <Users />{' '}
+    </Fragment>
   );
 };
 

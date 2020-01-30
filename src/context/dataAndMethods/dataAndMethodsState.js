@@ -51,7 +51,7 @@ const DataAndMethodsState = props => {
     const lambdaFunctionURL =
         'https://yfyft0meu9.execute-api.us-east-1.amazonaws.com/default/restapi';
 
-    //search dataAndMethods users
+    //search github users
     const searchUsers = async text => {
         setLoading(true);
         try {

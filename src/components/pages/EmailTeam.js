@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from 'react';
+import React, { useEffect, useContext, Fragment } from 'react';
 import { Link } from 'react-router-dom';
 import Spinner from '../layout/Spinner';
 import DataAndMethodsContext from '../../context/dataAndMethods/dataAndMethodsContext';
@@ -69,65 +69,67 @@ const EmailTeam = () => {
         return <Spinner />;
     } else {
         return (
-            <div>
-                <h3 className='page-top-margin'>Email team</h3>
-                <p className='p'>
-                    The following is a email form for team members that have public email addresses at dataAndMethods. You now can send them an invitation to collaborate using your installed email client.
+            <Fragment>
+                <div>
+                    <h3 className='page-top-margin'>Email team</h3>
+                    <p className='p'>
+                        The following is a email form for team members that have public email addresses at github. You now can send them an invitation to collaborate using your installed email client.
                 </p>
-                <Link to='/myTeam' className='btn btn-light'>
-                    <i className="fas fa-arrow-left"></i> My Team
+                    <Link to='/' className='btn btn-light'>
+                        <i className="fas fa-arrow-left"></i> My Team
                 </Link>
-                <button className='btn btn-light' onClick={sendEmailPressed}>
-                    Send email
+                    <button className='btn btn-light' onClick={sendEmailPressed}>
+                        Send email
                 </button>
-                <p className='input-aws-table-label'>To</p>
-                <input
-                    type='text'
-                    name='email_to'
-                    placeholder=''
-                    value={email_to}
-                    onChange={onChange}
-                    className='input-aws-table'
-                />
-                <p className='input-aws-table-label'>
-                    Subject
+                    <p className='input-aws-table-label'>To</p>
+                    <input
+                        type='text'
+                        name='email_to'
+                        placeholder=''
+                        value={email_to}
+                        onChange={onChange}
+                        className='input-aws-table'
+                    />
+                    <p className='input-aws-table-label'>
+                        Subject
                 </p>
-                <input
-                    type='text'
-                    name='email_subject'
-                    placeholder=''
-                    value={email_subject}
-                    onChange={onChange}
-                    className='input-aws-table'
-                />
-                <p className='input-aws-table-label'>CC</p>
-                <input
-                    type='text'
-                    name='email_cc'
-                    placeholder=''
-                    value={email_cc}
-                    onChange={onChange}
-                    className='input-aws-table'
-                />
-                <p className='input-aws-table-label'>BCC</p>
-                <input
-                    type='text'
-                    name='email_bcc'
-                    placeholder=''
-                    value={email_bcc}
-                    onChange={onChange}
-                    className='input-aws-table'
-                />
-                <p className='input-aws-table-label'>Your message</p>
-                <textarea
-                    name='email_body'
-                    rows='20'
-                    placeholder=''
-                    value={email_body}
-                    onChange={onChange}
-                    className='text-area-aws-table'
-                />
-            </div>
+                    <input
+                        type='text'
+                        name='email_subject'
+                        placeholder=''
+                        value={email_subject}
+                        onChange={onChange}
+                        className='input-aws-table'
+                    />
+                    <p className='input-aws-table-label'>CC</p>
+                    <input
+                        type='text'
+                        name='email_cc'
+                        placeholder=''
+                        value={email_cc}
+                        onChange={onChange}
+                        className='input-aws-table'
+                    />
+                    <p className='input-aws-table-label'>BCC</p>
+                    <input
+                        type='text'
+                        name='email_bcc'
+                        placeholder=''
+                        value={email_bcc}
+                        onChange={onChange}
+                        className='input-aws-table'
+                    />
+                    <p className='input-aws-table-label'>Your message</p>
+                    <textarea
+                        name='email_body'
+                        rows='20'
+                        placeholder=''
+                        value={email_body}
+                        onChange={onChange}
+                        className='text-area-aws-table'
+                    />
+                </div>
+            </Fragment>
         );
     }
 };

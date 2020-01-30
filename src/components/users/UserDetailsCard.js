@@ -18,17 +18,17 @@ const User = ({ match }) => {
 
   const removeUser = () => {
     if (dataAndMethodsContext.onMyTeamPage) {
-      dataAndMethodsContext.removeUserFromTeam(login, '/myTeam');
-    } else {
       dataAndMethodsContext.removeUserFromTeam(login, '/');
+    } else {
+      dataAndMethodsContext.removeUserFromTeam(login, '/findDevelopers');
     }
   };
 
   const addUser = () => {
     if (dataAndMethodsContext.onMyTeamPage) {
-      dataAndMethodsContext.addUserToTeam(dataAndMethodsContext.user, '/myTeam');
-    } else {
       dataAndMethodsContext.addUserToTeam(dataAndMethodsContext.user, '/');
+    } else {
+      dataAndMethodsContext.addUserToTeam(dataAndMethodsContext.user, '/findDevelopers');
     }
   };
 
@@ -56,8 +56,8 @@ const User = ({ match }) => {
     case "/":
       redirectToLocal = <Redirect to='/' />;
       break;
-    case "/myTeam":
-      redirectToLocal = <Redirect to='/myTeam' />;
+    case "/findDevelopers":
+      redirectToLocal = <Redirect to='/findDevelopers' />;
       break;
     default:
       redirectToLocal = null;
@@ -67,10 +67,10 @@ const User = ({ match }) => {
   return (
     <Fragment>
       {redirectToLocal}
-      <Link to='/myTeam' className='btn btn-light page-top-margin'>
+      <Link to='/' className='btn btn-light page-top-margin'>
         <i className="fas fa-arrow-left"></i> My Team
         </Link>
-      <Link to='/' className='btn btn-light'>
+      <Link to='/findDevelopers' className='btn btn-light'>
         <i className="fas fa-arrow-left"></i> Find Developers
         </Link>
       Hireable: {''}
