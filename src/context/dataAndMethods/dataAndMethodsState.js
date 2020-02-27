@@ -271,7 +271,7 @@ const DataAndMethodsState = props => {
     const deleteItemDynamoDB = async (TableName, team_id) => {
         try {
             const res = await axios.post(
-                'https://yfyft0meu9.execute-api.us-east-1.amazonaws.com/default/restapi',
+                lambdaFunctionURL,
                 {
                     myMethod: 'deleteItem',
                     myBody: {

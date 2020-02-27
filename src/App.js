@@ -29,6 +29,7 @@ const App = () => {
                   <Route exact path='/myEmail' component={EmailTeam} />{' '}
                   <Route exact path='/myDynamoTable' component={MyDynamoTable} />{' '}
                   <Route exact path='/user/:login' component={UserDetailsCard} />{' '}
+                  <Route component={MyTeam} />
                   <Route />
                 </Switch>{' '}
               </div>{' '}
