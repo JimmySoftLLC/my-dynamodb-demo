@@ -1,14 +1,10 @@
 console.log('Loading function');
 
-// const doc = require('dynamodb-doc');
-
-// const dynamo = new doc.DynamoDB();
-
 // Load the AWS SDK for Node.js
 var AWS = require('aws-sdk');
 // Set the region 
 AWS.config.update({
-    region: 'REGION'
+    region: 'us-east-1'
 });
 
 // Create DynamoDB document client
@@ -18,14 +14,14 @@ var dynamo = new AWS.DynamoDB.DocumentClient({
 
 /**
  * Demonstrates a simple HTTP endpoint using API Gateway.
- *
+ * 
  * I use POST with a request body for all methods.
  * myMethod is used to define the method.
- * I like to do this for security reasons because the query strings
+ * I like to do this for security reasons because the query strings 
  * in URL can be logged on the server.
- *
+ * 
  * The following JSON object is an example for dynamo.putItem.
- *
+ * 
  *        {
  *          myBody: {
  *            TableName: TableName,
@@ -38,14 +34,14 @@ var dynamo = new AWS.DynamoDB.DocumentClient({
  *           },
  *          myMethod: 'putItem',
  *        }
- *
+ * 
  * I also had to add the following get is to work with CORS
  * 'Access-Control-Allow-Origin': '*',
  * 'Access-Control-Allow-Methods': "GET,HEAD,OPTIONS,POST,PUT",
  * 'Access-Control-Allow-Headers': 'Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers'
- *
+ * 
  */
-
+//https://www.mydynamodb.com
 exports.handler = (event, context, callback) => {
     const done = (err, res) =>
         callback(null, {
@@ -55,7 +51,7 @@ exports.handler = (event, context, callback) => {
                 'Content-Type': 'application/json',
                 'Access-Control-Allow-Origin': '*',
                 'Access-Control-Allow-Methods': 'GET,HEAD,OPTIONS,POST,PUT',
-                'Access-Control-Allow-Headers': 'Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers',
+                'Access-Control-Allow-Headers': 'Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers'
             },
         });
 
@@ -69,31 +65,31 @@ exports.handler = (event, context, callback) => {
             done(null, response);
             break;
         case 'POST':
-            var myEventBody = JSON.parse(event.body);
+            var myEventBody = JSON.parse(event.body)
             switch (myEventBody.myMethod) {
                 case 'deleteItem':
                     if (myEventBody.myBody.Key.team_id <= lowestTeamNumber) {
                         done(new Error(`The team number is not in a valid range.  `));
                     } else {
-                        dynamo.deleteItem(myEventBody.myBody, done);
+                        dynamo.delete(myEventBody.myBody, done);
                     }
                     break;
                 case 'putItem':
                     if (myEventBody.myBody.Item.team_id <= lowestTeamNumber) {
                         done(new Error(`The team number is not in a valid range.  `));
                     } else {
-                        dynamo.putItem(myEventBody.myBody, done);
+                        dynamo.put(myEventBody.myBody, done);
                     }
                     break;
                 case 'updateItem':
                     if (myEventBody.myBody.Item.team_id <= lowestTeamNumber) {
                         done(new Error(`The team number is not in a valid range.  `));
                     } else {
-                        dynamo.updateItem(myEventBody.myBody, done);
+                        dynamo.update(myEventBody.myBody, done);
                     }
                     break;
                 case 'getItem':
-                    dynamo.getItem(myEventBody.myBody, done);
+                    dynamo.get(myEventBody.myBody, done);
                     break;
                 case 'scan':
                     dynamo.scan(myEventBody.myBody, done);
