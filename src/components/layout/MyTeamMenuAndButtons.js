@@ -6,7 +6,6 @@ import AlertContext from '../../context/alert/alertContext';
 import DataAndMethodsContext from '../../context/dataAndMethods/dataAndMethodsContext';
 
 const SelectTeamMenu = () => {
-
   const alertContext = useContext(AlertContext);
   const dataAndMethodsContext = useContext(DataAndMethodsContext);
 
@@ -15,10 +14,14 @@ const SelectTeamMenu = () => {
     scanTeamsButtonPressed();
     dataAndMethodsContext.setOnMyTeamPage(true);
     dataAndMethodsContext.redirectTo = '';
+    if (!team_id) {
+      getItemDynamoDB(tableName, parseInt(5)); // this loads the aws ninja as a default
+    }
     //eslint-disable-next-line
   }, []);
 
-  const { my_teams,
+  const {
+    my_teams,
     putItemDynamoDB,
     team_name,
     team_data,
@@ -31,7 +34,7 @@ const SelectTeamMenu = () => {
 
   const [anchorEl, setAnchorEl] = useState(null);
 
-  const showTeamMenu = event => {
+  const showTeamMenu = (event) => {
     setAnchorEl(event.currentTarget);
   };
 
@@ -90,11 +93,11 @@ const SelectTeamMenu = () => {
     }
   };
 
-  const getUpdates = id => {
+  const getUpdates = (id) => {
     getItemDynamoDB(tableName, parseInt(id));
   };
 
-  const menuItemSelectedGetUpdates = event => {
+  const menuItemSelectedGetUpdates = (event) => {
     getItemDynamoDB(tableName, parseInt(event.currentTarget.id));
     setAnchorEl(null);
   };
@@ -151,7 +154,7 @@ const SelectTeamMenu = () => {
         open={Boolean(anchorEl)}
         onClose={clickedOffMenu}
       >
-        {dataAndMethodsContext.my_teams.map(team => (
+        {dataAndMethodsContext.my_teams.map((team) => (
           <MenuItem
             key={team.team_id}
             id={team.team_id}
